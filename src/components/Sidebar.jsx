@@ -76,26 +76,26 @@ export default function Sidebar({ activeTab, setActiveTab, pelamarCount, kriteri
     <aside className="w-full md:w-64 lg:w-72 bg-white border-r border-slate-200/90 flex-shrink-0 flex flex-col justify-between no-print shadow-[1px_0_4px_rgba(0,0,0,0.02)] min-h-screen">
       <div>
         {/* Brand Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-bps-navy flex items-center justify-center text-white shadow-md shadow-bps-navy/20 flex-shrink-0 border border-bps-navy-light/40">
+        <div className="h-20 px-5 border-b border-slate-200/90 flex items-center gap-3.5 bg-white">
+          <div className="w-11 h-11 rounded-xl bg-bps-navy flex items-center justify-center text-white shadow-md shadow-bps-navy/20 flex-shrink-0 border border-bps-navy-light/40">
             {/* Logo BPS Geometry */}
-            <svg viewBox="0 0 40 40" className="w-6 h-6">
+            <svg viewBox="0 0 40 40" className="w-7 h-7">
               <polygon points="20,6 35,31 5,31" fill="#00A3E0" />
               <circle cx="20" cy="22.5" r="5.5" fill="#10B981" />
               <polygon points="12,31 28,31 20,36" fill="#F59E0B" />
             </svg>
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="font-extrabold text-[13px] text-bps-navy tracking-tight truncate">
+            <div className="flex items-center gap-2">
+              <span className="font-black text-sm text-bps-navy tracking-tight truncate">
                 BPS KAB. SUBANG
               </span>
-              <span className="px-1.5 py-0.5 text-[9px] font-black rounded bg-bps-blue/10 text-bps-blue uppercase tracking-wider">
+              <span className="px-1.5 py-0.5 text-[10px] font-black rounded-md bg-bps-blue/15 text-bps-blue uppercase tracking-wider">
                 SAW
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium truncate">
-              Seleksi Mitra Statistik Lapangan
+            <p className="text-xs text-slate-500 font-medium truncate mt-0.5">
+              Seleksi Mitra Statistik
             </p>
           </div>
         </div>
