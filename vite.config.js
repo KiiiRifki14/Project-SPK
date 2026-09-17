@@ -12,5 +12,16 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node'
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          xlsx: ['xlsx'],
+          icons: ['lucide-react']
+        }
+      }
+    }
   }
 })
