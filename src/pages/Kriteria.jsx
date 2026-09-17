@@ -11,7 +11,7 @@ import {
   X,
   TrendingUp,
   TrendingDown,
-  Info
+  Percent
 } from 'lucide-react';
 import { validateBobot, autoNormalizeBobot } from '../services/sawCalculator.js';
 import { INITIAL_KRITERIA } from '../data/initialKriteria.js';
@@ -52,96 +52,128 @@ export default function Kriteria({ kriteria = [], onUpdateKriteria, onShowAlert 
     onShowAlert('Bobot kriteria dikembalikan ke konfigurasi standar rekrutmen BPS Subang', 'info');
   };
 
+  // Color map for visual weight distribution
+  const criteriaColors = {
+    C1: 'bg-blue-500',
+    C2: 'bg-emerald-500',
+    C3: 'bg-cyan-500',
+    C4: 'bg-purple-500',
+    C5: 'bg-amber-500'
+  };
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Header Halaman */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-card">
+    <div className="space-y-5 animate-fade-in pb-8">
+      {/* Top Header & Reset */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2 text-bps-navy">
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <Sliders className="w-5 h-5 text-bps-blue" />
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
-              Manajemen Kriteria & Bobot Penilaian
-            </h1>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Pengaturan bobot preferensi (W) dan sifat kriteria (Benefit / Cost) untuk seleksi mitra survei BPS Subang.
+            Manajemen Kriteria & Bobot Penilaian
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Pengaturan bobot preferensi (W) dan sifat kriteria (Benefit / Cost) seleksi mitra statistik BPS Subang.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleResetBobot}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors border border-slate-200"
-          >
-            <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-            Reset Bobot BPS
-          </button>
+        <button
+          onClick={handleResetBobot}
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 transition-colors border border-slate-200/90 shadow-2xs self-start sm:self-auto"
+        >
+          <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+          Reset Bobot BPS
+        </button>
+      </div>
+
+      {/* Visual Weight Distribution Segment Bar */}
+      <div className="bg-white p-4 rounded-xl border border-slate-200/90 shadow-xs space-y-3">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-bold text-slate-700 flex items-center gap-1.5">
+            <Percent className="w-3.5 h-3.5 text-bps-blue" />
+            Distribusi Proporsi Bobot Preferensi (Total: {(validation.total * 100).toFixed(0)}%)
+          </span>
+          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+            validation.isValid ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
+          }`}>
+            {validation.isValid ? 'Total 100% Sempurna' : `Selisih ${(validation.diff * 100).toFixed(1)}%`}
+          </span>
+        </div>
+
+        {/* Segmented Bar */}
+        <div className="h-3 w-full bg-slate-100 rounded-full flex overflow-hidden p-0.5 gap-0.5">
+          {kriteria.map(c => {
+            const pct = Math.max(2, (c.bobot / (validation.total || 1)) * 100);
+            return (
+              <div 
+                key={c.kode}
+                className={`${criteriaColors[c.kode] || 'bg-slate-400'} h-full rounded-xs transition-all duration-300`}
+                style={{ width: `${pct}%` }}
+                title={`${c.kode}: ${(c.bobot * 100).toFixed(0)}%`}
+              />
+            );
+          })}
+        </div>
+
+        {/* Legend */}
+        <div className="flex flex-wrap items-center gap-3 pt-1">
+          {kriteria.map(c => (
+            <div key={c.kode} className="flex items-center gap-1.5 text-xs">
+              <span className={`w-2.5 h-2.5 rounded-full ${criteriaColors[c.kode] || 'bg-slate-400'}`} />
+              <span className="font-bold text-slate-800">{c.kode}</span>
+              <span className="text-slate-500 font-mono text-[11px] font-semibold">({(c.bobot * 100).toFixed(0)}%)</span>
+            </div>
+          ))}
         </div>
       </div>
 
-      {/* Indikator Validasi Total Bobot */}
-      <div className={`p-4 sm:p-5 rounded-2xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-card transition-all ${
-        validation.isValid 
-          ? 'bg-emerald-50/80 border-emerald-200 text-emerald-950'
-          : 'bg-rose-50/80 border-rose-200 text-rose-950'
-      }`}>
-        <div className="flex items-center gap-3.5">
-          {validation.isValid ? (
-            <div className="p-2.5 bg-emerald-600 text-white rounded-xl flex-shrink-0 shadow-sm">
-              <CheckCircle2 className="w-5 h-5" />
+      {/* Indikator Validasi Total Bobot Warning if Invalid */}
+      {!validation.isValid && (
+        <div className="p-3.5 rounded-xl border bg-rose-50 border-rose-200 text-rose-950 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 bg-rose-600 text-white rounded-lg flex-shrink-0">
+              <AlertTriangle className="w-4 h-4" />
             </div>
-          ) : (
-            <div className="p-2.5 bg-rose-600 text-white rounded-xl flex-shrink-0 shadow-sm">
-              <AlertTriangle className="w-5 h-5" />
+            <div>
+              <h2 className="text-xs font-bold">
+                Total Bobot Tidak Valid: {validation.total.toFixed(2)} (Wajib 1.00 / 100%)
+              </h2>
+              <p className="text-[11px] opacity-80 mt-0.5">
+                Terdapat selisih {(validation.diff * 100).toFixed(1)}%. Mohon sesuaikan bobot atau gunakan tombol normalisasi otomatis.
+              </p>
             </div>
-          )}
-          <div>
-            <h2 className="text-sm font-bold tracking-tight">
-              {validation.isValid 
-                ? `Total Bobot Kriteria Valid: ${validation.total.toFixed(2)} (100%)`
-                : `Total Bobot Tidak Valid: ${validation.total.toFixed(2)} (Wajib 1.00 / 100%)`}
-            </h2>
-            <p className="text-xs opacity-80 mt-0.5">
-              {validation.isValid
-                ? 'Seluruh perhitungan matriks SAW siap dihitung dengan normalisasi matematis yang akurat.'
-                : `Terdapat selisih ${(validation.diff * 100).toFixed(1)}%. Mohon sesuaikan bobot atau gunakan tombol normalisasi otomatis.`}
-            </p>
           </div>
-        </div>
 
-        {!validation.isValid && (
           <button
             onClick={handleAutoNormalize}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-bps-navy text-white hover:bg-bps-navy-light shadow-md transition-all self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all self-start sm:self-auto"
           >
             <Sparkles className="w-3.5 h-3.5 text-bps-blue" />
             Normalisasi Otomatis Bobot
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {/* Tabel Kriteria */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+      <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div>
-            <h2 className="text-sm font-bold text-bps-navy">Daftar Kriteria Seleksi Mitra Statistik</h2>
-            <p className="text-xs text-slate-500">5 kriteria penilaian terstandardisasi BPS Kabupaten Subang</p>
+            <h2 className="text-sm font-bold text-slate-900">Daftar Kriteria Penilaian Terstandardisasi</h2>
+            <p className="text-xs text-slate-500">5 kriteria seleksi mitra survei lapangan BPS Kabupaten Subang</p>
           </div>
-          <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-bps-blue/10 text-bps-blue border border-bps-blue/20">
+          <span className="px-2 py-0.5 rounded-md text-[10px] font-black bg-blue-50 text-bps-navy border border-blue-200 uppercase tracking-wide">
             Metode SAW
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+            <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
-                <th className="py-3 px-4 w-16 text-center">Kode</th>
-                <th className="py-3 px-4">Nama Kriteria</th>
-                <th className="py-3 px-4 w-36 text-center">Sifat / Atribut</th>
-                <th className="py-3 px-4 w-36 text-center">Bobot (W)</th>
-                <th className="py-3 px-4">Keterangan Skala Penilaian</th>
-                <th className="py-3 px-4 w-28 text-center">Aksi</th>
+                <th scope="col" className="py-2.5 px-4 w-16 text-center">Kode</th>
+                <th scope="col" className="py-2.5 px-4">Nama Kriteria</th>
+                <th scope="col" className="py-2.5 px-4 w-36 text-center">Sifat Atribut</th>
+                <th scope="col" className="py-2.5 px-4 w-36 text-center">Bobot Preferensi (W)</th>
+                <th scope="col" className="py-2.5 px-4">Keterangan Skala Penilaian</th>
+                <th scope="col" className="py-2.5 px-4 w-24 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -150,37 +182,37 @@ export default function Kriteria({ kriteria = [], onUpdateKriteria, onShowAlert 
                 const isEditing = editingId === c.kode;
 
                 return (
-                  <tr key={c.kode} className="hover:bg-slate-50/60 transition-colors">
+                  <tr key={c.kode} className="hover:bg-slate-50/70 transition-colors">
                     {/* Kode */}
-                    <td className="py-3.5 px-4 text-center font-extrabold text-bps-navy font-mono">
-                      <span className="px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-xs">
+                    <td className="py-3 px-4 text-center font-extrabold text-bps-navy font-mono">
+                      <span className="px-2 py-0.5 rounded bg-slate-100 border border-slate-200 text-xs font-mono">
                         {c.kode}
                       </span>
                     </td>
 
                     {/* Nama Kriteria */}
-                    <td className="py-3.5 px-4">
-                      <p className="font-bold text-slate-800">{c.nama}</p>
-                      <p className="text-xs text-slate-400">Satuan: {c.satuan}</p>
+                    <td className="py-3 px-4">
+                      <p className="font-bold text-slate-900">{c.nama}</p>
+                      <p className="text-[11px] text-slate-400 font-medium">Satuan: {c.satuan}</p>
                     </td>
 
                     {/* Sifat: Benefit / Cost */}
-                    <td className="py-3.5 px-4 text-center">
+                    <td className="py-3 px-4 text-center">
                       {isCost ? (
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
-                          <TrendingDown className="w-3.5 h-3.5 text-amber-600" />
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">
+                          <TrendingDown className="w-3 h-3 text-amber-600" aria-hidden="true" />
                           Cost (Biaya)
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-bps-navy border border-bps-blue/20">
-                          <TrendingUp className="w-3.5 h-3.5 text-bps-blue" />
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-bps-navy border border-blue-200">
+                          <TrendingUp className="w-3 h-3 text-bps-blue" aria-hidden="true" />
                           Benefit (Manfaat)
                         </span>
                       )}
                     </td>
 
                     {/* Bobot */}
-                    <td className="py-3.5 px-4 text-center font-mono">
+                    <td className="py-3 px-4 text-center font-mono tabular-nums">
                       {isEditing ? (
                         <div className="flex items-center justify-center gap-1">
                           <input
@@ -188,51 +220,57 @@ export default function Kriteria({ kriteria = [], onUpdateKriteria, onShowAlert 
                             step="0.01"
                             min="0.01"
                             max="1"
+                            inputMode="decimal"
+                            aria-label={`Ubah bobot kriteria ${c.kode}`}
                             value={editBobot}
                             onChange={(e) => setEditBobot(e.target.value)}
-                            className="w-20 px-2 py-1 text-xs border border-bps-blue rounded-lg text-center font-bold focus:outline-none focus:ring-2 focus:ring-bps-blue"
+                            className="w-18 px-2 py-1 text-xs border border-bps-blue rounded-lg text-center font-bold focus-ring font-mono tabular-nums"
                             autoFocus
                           />
                         </div>
                       ) : (
                         <div className="flex items-center justify-center gap-1.5">
-                          <span className="font-extrabold text-sm text-slate-800">{c.bobot.toFixed(2)}</span>
-                          <span className="text-[11px] font-semibold text-slate-400">({Math.round(c.bobot * 100)}%)</span>
+                          <span className="font-black text-sm text-slate-900 font-mono tabular-nums">{c.bobot.toFixed(2)}</span>
+                          <span className="text-[10px] font-bold text-slate-400 font-mono tabular-nums">({Math.round(c.bobot * 100)}%)</span>
                         </div>
                       )}
                     </td>
 
                     {/* Keterangan */}
-                    <td className="py-3.5 px-4 text-xs text-slate-600 leading-relaxed">
+                    <td className="py-3 px-4 text-xs text-slate-600 leading-relaxed">
                       {c.keterangan}
                     </td>
 
                     {/* Aksi */}
-                    <td className="py-3.5 px-4 text-center">
+                    <td className="py-3 px-4 text-center">
                       {isEditing ? (
                         <div className="flex items-center justify-center gap-1">
                           <button
                             onClick={() => handleSaveEdit(c)}
-                            className="p-1.5 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-sm"
+                            aria-label={`Simpan bobot ${c.kode}`}
+                            className="p-1 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-2xs focus-ring"
                             title="Simpan"
                           >
-                            <Save className="w-3.5 h-3.5" />
+                            <Save className="w-3.5 h-3.5" aria-hidden="true" />
                           </button>
                           <button
                             onClick={() => setEditingId(null)}
-                            className="p-1.5 rounded-lg bg-slate-200 text-slate-600 hover:bg-slate-300 transition-colors"
+                            aria-label={`Batal ubah bobot ${c.kode}`}
+                            className="p-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors focus-ring"
                             title="Batal"
                           >
-                            <X className="w-3.5 h-3.5" />
+                            <X className="w-3.5 h-3.5" aria-hidden="true" />
                           </button>
                         </div>
                       ) : (
                         <button
                           onClick={() => handleStartEdit(c)}
-                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold text-bps-navy hover:bg-slate-100 transition-colors"
+                          aria-label={`Ubah bobot kriteria ${c.kode}`}
+                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-bps-navy bg-slate-100 hover:bg-blue-50 hover:text-bps-blue transition-colors focus-ring"
+                          title="Ubah Bobot"
                         >
-                          <Edit2 className="w-3 h-3 text-bps-blue" />
-                          Ubah
+                          <Edit2 className="w-3 h-3" aria-hidden="true" />
+                          <span>Ubah</span>
                         </button>
                       )}
                     </td>
@@ -245,30 +283,28 @@ export default function Kriteria({ kriteria = [], onUpdateKriteria, onShowAlert 
       </div>
 
       {/* Catatan Akademik Buku Ajar */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-card space-y-3">
-        <div className="flex items-center gap-2 text-bps-navy font-bold text-sm">
+      <div className="bg-white rounded-xl border border-slate-200/90 p-4 sm:p-5 shadow-xs space-y-2.5">
+        <div className="flex items-center gap-2 text-bps-navy font-bold text-xs">
           <HelpCircle className="w-4 h-4 text-bps-blue" />
           <span>Pedoman Ilmiah Sifat Kriteria Benefit vs Cost (Bab 5 Buku Ajar SPK Polsub)</span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-600 leading-relaxed">
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/60 space-y-1">
-            <p className="font-bold text-bps-navy flex items-center gap-1.5">
-              <TrendingUp className="w-4 h-4 text-bps-blue" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs text-slate-600 leading-relaxed">
+          <div className="p-3 bg-slate-50/80 rounded-lg border border-slate-200/80 space-y-1">
+            <p className="font-bold text-bps-navy flex items-center gap-1 text-[11.5px]">
+              <TrendingUp className="w-3.5 h-3.5 text-bps-blue" />
               Kriteria Benefit (C1, C2, C3, C4):
             </p>
-            <p>
-              Semakin tinggi nilai pelamar, semakin diprioritaskan. 
-              Rumus normalisasi: <code className="bg-white border px-1.5 py-0.5 rounded text-bps-navy font-mono font-bold">r_ij = x_ij / max(x_j)</code>.
+            <p className="text-[11px] text-slate-600">
+              Semakin tinggi nilai pelamar, semakin diprioritaskan. Rumus normalisasi: <code className="bg-white border px-1 py-0.5 rounded text-bps-navy font-mono font-bold text-[10px]">r_ij = x_ij / max(x_j)</code>.
             </p>
           </div>
-          <div className="p-4 bg-slate-50 rounded-xl border border-slate-200/60 space-y-1">
-            <p className="font-bold text-amber-800 flex items-center gap-1.5">
-              <TrendingDown className="w-4 h-4 text-amber-600" />
+          <div className="p-3 bg-slate-50/80 rounded-lg border border-slate-200/80 space-y-1">
+            <p className="font-bold text-amber-800 flex items-center gap-1 text-[11.5px]">
+              <TrendingDown className="w-3.5 h-3.5 text-amber-600" />
               Kriteria Cost (C5 Jarak Domisili):
             </p>
-            <p>
-              Semakin dekat jarak pelamar ke target survei (semakin kecil nilai km), semakin hemat mobilitas operasional. 
-              Rumus normalisasi: <code className="bg-white border px-1.5 py-0.5 rounded text-amber-800 font-mono font-bold">r_ij = min(x_j) / x_ij</code>.
+            <p className="text-[11px] text-slate-600">
+              Semakin dekat jarak pelamar ke target survei (semakin kecil km), semakin hemat mobilitas. Rumus normalisasi: <code className="bg-white border px-1 py-0.5 rounded text-amber-800 font-mono font-bold text-[10px]">r_ij = min(x_j) / x_ij</code> (batas min 0.1 km).
             </p>
           </div>
         </div>

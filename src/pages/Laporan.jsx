@@ -38,34 +38,34 @@ export default function Laporan({
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in pb-8">
       {/* Action Toolbar (No-Print) */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-card no-print">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 no-print">
         <div>
-          <div className="flex items-center gap-2 text-bps-navy">
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <Printer className="w-5 h-5 text-bps-blue" />
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
-              Berita Acara Resmi Hasil Rekrutmen Mitra
-            </h1>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
+            Berita Acara Resmi Hasil Rekrutmen Mitra
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
             Format resmi surat dinas BPS Kabupaten Subang. Siap dicetak langsung atau disimpan ke format PDF (Ctrl + P).
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setIsEditingSettings(!isEditingSettings)}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors border border-slate-200"
+            aria-expanded={isEditingSettings}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 transition-colors border border-slate-200/90 shadow-2xs focus-ring"
           >
-            <Settings className="w-4 h-4 text-slate-500" />
+            <Settings className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
             {isEditingSettings ? 'Tutup Pengaturan' : 'Ubah No. SK & Kop'}
           </button>
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-md shadow-bps-navy/20 transition-all active:scale-95"
+            aria-label="Cetak atau simpan dokumen berita acara ke format PDF"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95 focus-ring"
           >
-            <Printer className="w-4 h-4 text-bps-blue" />
+            <Printer className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
             Cetak / Simpan PDF
           </button>
         </div>
@@ -73,78 +73,63 @@ export default function Laporan({
 
       {/* Form Edit Pengaturan Surat (No-Print) */}
       {isEditingSettings && (
-        <div className="bg-white p-6 rounded-2xl border border-bps-blue/30 shadow-card space-y-4 no-print animate-fade-in">
-          <h3 className="text-sm font-bold text-bps-navy flex items-center gap-2">
-            <Settings className="w-4 h-4 text-bps-blue" />
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-bps-blue/30 shadow-xs space-y-3 no-print animate-fade-in">
+          <h3 className="text-xs font-bold text-bps-navy flex items-center gap-2">
+            <Settings className="w-4 h-4 text-bps-blue" aria-hidden="true" />
             Pengaturan Informasi Lembar Surat Resmi
           </h3>
-          <form onSubmit={handleSaveSettings} className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+          <form onSubmit={handleSaveSettings} className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Nomor SK Berita Acara</label>
+              <label htmlFor="sk-nomor" className="block text-[11px] font-semibold text-slate-600 mb-1">Nomor SK Berita Acara</label>
               <input
+                id="sk-nomor"
                 type="text"
                 value={formSettings.nomorSK || ''}
                 onChange={(e) => setFormSettings({ ...formSettings, nomorSK: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
+                className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-bps-blue focus-ring"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Nama Periode Sensus / Survei</label>
+              <label htmlFor="sk-periode" className="block text-[11px] font-semibold text-slate-600 mb-1">Nama Periode Sensus / Survei</label>
               <input
+                id="sk-periode"
                 type="text"
                 value={formSettings.namaPeriode || ''}
                 onChange={(e) => setFormSettings({ ...formSettings, namaPeriode: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
+                className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-bps-blue focus-ring"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Nama Kepala BPS Kabupaten Subang</label>
+              <label htmlFor="sk-kepala" className="block text-[11px] font-semibold text-slate-600 mb-1">Nama Kepala BPS Kabupaten Subang</label>
               <input
+                id="sk-kepala"
                 type="text"
-                value={formSettings.kepalaBpsNama || ''}
-                onChange={(e) => setFormSettings({ ...formSettings, kepalaBpsNama: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
+                value={formSettings.namaKepala || ''}
+                onChange={(e) => setFormSettings({ ...formSettings, namaKepala: e.target.value })}
+                className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-bps-blue focus-ring"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">NIP Kepala BPS Subang</label>
+              <label htmlFor="sk-nip" className="block text-[11px] font-semibold text-slate-600 mb-1">NIP Kepala BPS</label>
               <input
+                id="sk-nip"
                 type="text"
-                value={formSettings.kepalaBpsNip || ''}
-                onChange={(e) => setFormSettings({ ...formSettings, kepalaBpsNip: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
+                value={formSettings.nipKepala || ''}
+                onChange={(e) => setFormSettings({ ...formSettings, nipKepala: e.target.value })}
+                className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-bps-blue focus-ring font-mono tabular-nums"
               />
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Nama Ketua Panitia Seleksi</label>
-              <input
-                type="text"
-                value={formSettings.ketuaPanitiaNama || ''}
-                onChange={(e) => setFormSettings({ ...formSettings, ketuaPanitiaNama: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Tanggal Penetapan Surat</label>
-              <input
-                type="date"
-                value={formSettings.tanggalSK || ''}
-                onChange={(e) => setFormSettings({ ...formSettings, tanggalSK: e.target.value })}
-                className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
-              />
-            </div>
-
             <div className="sm:col-span-2 flex justify-end gap-2 pt-2 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setIsEditingSettings(false)}
-                className="px-4 py-2 text-xs font-semibold text-slate-500 hover:bg-slate-100 rounded-xl"
+                className="px-3 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-100 rounded-lg focus-ring"
               >
                 Batal
               </button>
               <button
                 type="submit"
-                className="px-5 py-2 text-xs font-bold bg-bps-navy text-white hover:bg-bps-navy-light rounded-xl shadow"
+                className="px-4 py-1.5 text-xs font-bold bg-bps-navy text-white hover:bg-bps-navy-light rounded-lg shadow-xs focus-ring"
               >
                 Simpan Perubahan
               </button>
@@ -156,11 +141,11 @@ export default function Laporan({
       {/* ========================================================== */}
       {/* LEMBAR DOKUMEN BERITA ACARA RESMI SIAP CETAK (A4 PAPER)    */}
       {/* ========================================================== */}
-      <div className="bg-white p-8 sm:p-12 rounded-3xl border border-slate-300 shadow-elevated max-w-4xl mx-auto print-container text-slate-900 leading-relaxed font-sans">
+      <div className="bg-white p-8 sm:p-12 rounded-xl border border-slate-300 shadow-sm max-w-4xl mx-auto print-container text-slate-900 leading-relaxed font-sans">
         
         {/* KOP SURAT RESMI */}
         <div className="flex items-center gap-5 border-b-4 border-double border-slate-900 pb-4 mb-6">
-          <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center">
+          <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center" aria-hidden="true">
             <svg viewBox="0 0 100 100" className="w-16 h-16 fill-current text-bps-navy">
               <polygon points="50,15 90,80 10,80" fill="#0B3C68" />
               <polygon points="50,28 78,75 22,75" fill="#00A3E0" />
@@ -190,7 +175,7 @@ export default function Laporan({
           <h2 className="text-base sm:text-lg font-bold uppercase tracking-wide text-slate-900 underline">
             BERITA ACARA PENETAPAN HASIL SELEKSI MITRA STATISTIK
           </h2>
-          <p className="text-xs font-mono text-slate-700">
+          <p className="text-xs font-mono text-slate-700 tabular-nums">
             NOMOR: {pengaturan?.nomorSK || 'B-045/32130/VS.100/2026'}
           </p>
           <p className="text-xs text-slate-600 uppercase font-semibold">
@@ -219,12 +204,12 @@ export default function Laporan({
           <table className="w-full border-collapse border border-slate-900 text-xs">
             <thead>
               <tr className="bg-slate-100 text-slate-900 text-center font-bold">
-                <th className="border border-slate-900 py-2 px-2 w-10">No</th>
-                <th className="border border-slate-900 py-2 px-3">Nama Lengkap</th>
-                <th className="border border-slate-900 py-2 px-3 w-36">NIK</th>
-                <th className="border border-slate-900 py-2 px-3">Kecamatan</th>
-                <th className="border border-slate-900 py-2 px-2 w-20">Skor (V)</th>
-                <th className="border border-slate-900 py-2 px-2 w-28">Keterangan</th>
+                <th scope="col" className="border border-slate-900 py-2 px-2 w-10">No</th>
+                <th scope="col" className="border border-slate-900 py-2 px-3">Nama Lengkap</th>
+                <th scope="col" className="border border-slate-900 py-2 px-3 w-36">NIK</th>
+                <th scope="col" className="border border-slate-900 py-2 px-3">Kecamatan</th>
+                <th scope="col" className="border border-slate-900 py-2 px-2 w-20">Skor (V)</th>
+                <th scope="col" className="border border-slate-900 py-2 px-2 w-28">Keterangan</th>
               </tr>
             </thead>
             <tbody>
@@ -237,11 +222,11 @@ export default function Laporan({
               ) : (
                 listLolos.map((m, idx) => (
                   <tr key={m.id} className="text-slate-900">
-                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold">{idx + 1}</td>
+                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">{idx + 1}</td>
                     <td className="border border-slate-900 py-1.5 px-3 font-semibold">{m.nama}</td>
-                    <td className="border border-slate-900 py-1.5 px-3 text-center font-mono">{m.nik}</td>
+                    <td className="border border-slate-900 py-1.5 px-3 text-center font-mono tabular-nums">{m.nik}</td>
                     <td className="border border-slate-900 py-1.5 px-3">{m.kecamatan}</td>
-                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono">
+                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">
                       {m.scoreV.toFixed(4)}
                     </td>
                     <td className="border border-slate-900 py-1.5 px-2 text-center font-semibold text-emerald-800">
@@ -263,22 +248,22 @@ export default function Laporan({
             <table className="w-full border-collapse border border-slate-900 text-xs">
               <thead>
                 <tr className="bg-slate-100 text-slate-900 text-center font-bold">
-                  <th className="border border-slate-900 py-2 px-2 w-10">No</th>
-                  <th className="border border-slate-900 py-2 px-3">Nama Lengkap</th>
-                  <th className="border border-slate-900 py-2 px-3 w-36">NIK</th>
-                  <th className="border border-slate-900 py-2 px-3">Kecamatan</th>
-                  <th className="border border-slate-900 py-2 px-2 w-20">Skor (V)</th>
-                  <th className="border border-slate-900 py-2 px-2 w-28">Keterangan</th>
+                  <th scope="col" className="border border-slate-900 py-2 px-2 w-10">No</th>
+                  <th scope="col" className="border border-slate-900 py-2 px-3">Nama Lengkap</th>
+                  <th scope="col" className="border border-slate-900 py-2 px-3 w-36">NIK</th>
+                  <th scope="col" className="border border-slate-900 py-2 px-3">Kecamatan</th>
+                  <th scope="col" className="border border-slate-900 py-2 px-2 w-20">Skor (V)</th>
+                  <th scope="col" className="border border-slate-900 py-2 px-2 w-28">Keterangan</th>
                 </tr>
               </thead>
               <tbody>
                 {listCadangan.map((m, idx) => (
                   <tr key={m.id} className="text-slate-900">
-                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold">{idx + 1}</td>
+                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">{idx + 1}</td>
                     <td className="border border-slate-900 py-1.5 px-3 font-semibold">{m.nama}</td>
-                    <td className="border border-slate-900 py-1.5 px-3 text-center font-mono">{m.nik}</td>
+                    <td className="border border-slate-900 py-1.5 px-3 text-center font-mono tabular-nums">{m.nik}</td>
                     <td className="border border-slate-900 py-1.5 px-3">{m.kecamatan}</td>
-                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono">
+                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">
                       {m.scoreV.toFixed(4)}
                     </td>
                     <td className="border border-slate-900 py-1.5 px-2 text-center font-semibold text-amber-800">

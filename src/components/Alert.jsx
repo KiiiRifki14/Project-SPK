@@ -29,7 +29,11 @@ export default function Alert({ alert, onClose }) {
   const type = alert.type || 'info';
 
   return (
-    <div className="fixed top-5 right-5 z-50 max-w-md w-full animate-bounce-in shadow-xl rounded-xl border p-4 backdrop-blur-sm transition-all duration-300 no-print">
+    <div 
+      role="status" 
+      aria-live="polite" 
+      className="fixed top-5 right-5 z-50 max-w-md w-full animate-bounce-in shadow-xl rounded-xl border p-4 backdrop-blur-sm transition-all duration-300 no-print"
+    >
       <div className={`flex items-start gap-3 p-3 rounded-lg border ${bgs[type] || bgs.info}`}>
         {icons[type] || icons.info}
         <div className="flex-1 text-sm font-medium pr-2">
@@ -37,10 +41,10 @@ export default function Alert({ alert, onClose }) {
         </div>
         <button
           onClick={onClose}
-          className="text-slate-400 hover:text-slate-600 transition-colors p-1"
-          aria-label="Tutup"
+          className="text-slate-400 hover:text-slate-600 transition-colors p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-bps-blue rounded"
+          aria-label="Tutup notifikasi"
         >
-          <X className="w-4 h-4" />
+          <X className="w-4 h-4" aria-hidden="true" />
         </button>
       </div>
     </div>

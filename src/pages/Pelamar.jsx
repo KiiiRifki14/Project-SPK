@@ -244,30 +244,30 @@ export default function Pelamar({
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleOpenAddModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95 focus-ring"
           >
-            <UserPlus className="w-3.5 h-3.5 text-bps-blue" />
+            <UserPlus className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
             Tambah Pelamar
           </button>
 
           <button
             onClick={onLoadSample}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors shadow-2xs focus-ring"
           >
-            <Sparkles className="w-3.5 h-3.5 text-bps-blue" />
+            <Sparkles className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
             Muat Sampel
           </button>
 
           <button
             onClick={handleExportExcel}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs focus-ring"
           >
-            <Download className="w-3.5 h-3.5 text-emerald-600" />
+            <Download className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
             Export Excel
           </button>
 
-          <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors cursor-pointer shadow-2xs">
-            <Upload className="w-3.5 h-3.5 text-slate-500" />
+          <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors cursor-pointer shadow-2xs focus-within:ring-2 focus-within:ring-bps-blue">
+            <Upload className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
             <span>Import Excel</span>
             <input
               type="file"
@@ -284,10 +284,13 @@ export default function Pelamar({
       <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative w-full sm:w-80">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
           <input
             type="text"
-            placeholder="Cari nama pelamar atau NIK..."
+            aria-label="Cari nama pelamar atau NIK"
+            autoComplete="off"
+            spellCheck={false}
+            placeholder="Cari nama pelamar atau NIK…"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-8 pr-8 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-1 focus:ring-bps-blue transition-all"
@@ -295,21 +298,24 @@ export default function Pelamar({
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              aria-label="Hapus teks pencarian"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus-ring rounded"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
           )}
         </div>
 
         {/* Dropdown Kecamatan Subang */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
-          <span className="text-xs text-slate-500 font-medium hidden md:inline">Kecamatan:</span>
+          <Filter className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" aria-hidden="true" />
+          <label htmlFor="filter-kecamatan" className="text-xs text-slate-500 font-medium hidden md:inline">Kecamatan:</label>
           <select
+            id="filter-kecamatan"
+            aria-label="Pilih filter kecamatan"
             value={selectedKecamatan}
             onChange={(e) => setSelectedKecamatan(e.target.value)}
-            className="w-full sm:w-48 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-1 focus:ring-bps-blue"
+            className="w-full sm:w-48 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-1 focus:ring-bps-blue focus-ring"
           >
             <option value="Semua">Semua Kecamatan ({pelamar.length})</option>
             {KECAMATAN_SUBANG.map(kec => (
@@ -323,11 +329,11 @@ export default function Pelamar({
       <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
         <div className="p-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="text-xs text-slate-500 font-medium">
-            Menampilkan <strong>{filteredPelamar.length}</strong> dari total {pelamar.length} calon mitra
+            Menampilkan <strong className="tabular-nums">{filteredPelamar.length}</strong> dari total <span className="tabular-nums">{pelamar.length}</span> calon mitra
           </div>
           {searchTerm && (
             <span className="text-[11px] text-bps-blue font-semibold">
-              Filter aktif: "{searchTerm}"
+              Filter aktif: “{searchTerm}”
             </span>
           )}
         </div>
@@ -336,16 +342,16 @@ export default function Pelamar({
           <table className="w-full text-left text-xs sm:text-sm">
             <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
-                <th className="py-2.5 px-3.5 w-12 text-center">No</th>
-                <th className="py-2.5 px-3.5">Nama Lengkap & NIK</th>
-                <th className="py-2.5 px-3.5">Kecamatan</th>
-                <th className="py-2.5 px-3.5 text-center">Pendidikan</th>
-                <th className="py-2.5 px-3 text-right" title="Nilai Ujian (0-100)">C1 (Ujian)</th>
-                <th className="py-2.5 px-3 text-right" title="Pengalaman Survei (kali)">C2 (Survei)</th>
-                <th className="py-2.5 px-3 text-right" title="Uji CAPI (0-100)">C3 (CAPI)</th>
-                <th className="py-2.5 px-3 text-right" title="Skor Pendidikan (2-4)">C4 (Skor)</th>
-                <th className="py-2.5 px-3 text-right" title="Jarak ke Wilayah (KM)">C5 (Jarak)</th>
-                <th className="py-2.5 px-3.5 w-20 text-center">Aksi</th>
+                <th scope="col" className="py-2.5 px-3.5 w-12 text-center">No</th>
+                <th scope="col" className="py-2.5 px-3.5">Nama Lengkap & NIK</th>
+                <th scope="col" className="py-2.5 px-3.5">Kecamatan</th>
+                <th scope="col" className="py-2.5 px-3.5 text-center">Pendidikan</th>
+                <th scope="col" className="py-2.5 px-3 text-right" title="Nilai Ujian (0-100)">C1 (Ujian)</th>
+                <th scope="col" className="py-2.5 px-3 text-right" title="Pengalaman Survei (kali)">C2 (Survei)</th>
+                <th scope="col" className="py-2.5 px-3 text-right" title="Uji CAPI (0-100)">C3 (CAPI)</th>
+                <th scope="col" className="py-2.5 px-3 text-right" title="Skor Pendidikan (2-4)">C4 (Skor)</th>
+                <th scope="col" className="py-2.5 px-3 text-right" title="Jarak ke Wilayah (KM)">C5 (Jarak)</th>
+                <th scope="col" className="py-2.5 px-3.5 w-20 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -361,17 +367,17 @@ export default function Pelamar({
 
                   return (
                     <tr key={p.id || idx} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-2.5 px-3.5 text-center text-xs text-slate-400 font-mono">
+                      <td className="py-2.5 px-3.5 text-center text-xs text-slate-400 font-mono tabular-nums">
                         {idx + 1}
                       </td>
                       <td className="py-2.5 px-3.5">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-blue-50 text-bps-navy font-bold text-[10px] flex items-center justify-center flex-shrink-0 border border-blue-100">
+                          <div className="w-7 h-7 rounded-lg bg-blue-50 text-bps-navy font-bold text-[10px] flex items-center justify-center flex-shrink-0 border border-blue-100" aria-hidden="true">
                             {initials}
                           </div>
                           <div>
                             <p className="font-bold text-slate-900 leading-tight">{p.nama}</p>
-                            <p className="text-[10px] text-slate-400 font-mono mt-0.5">NIK: {p.nik}</p>
+                            <p className="text-[10px] text-slate-400 font-mono tabular-nums mt-0.5">NIK: {p.nik}</p>
                           </div>
                         </div>
                       </td>
@@ -383,36 +389,38 @@ export default function Pelamar({
                           {p.pendidikan}
                         </span>
                       </td>
-                      <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-800">
+                      <td className="py-2.5 px-3 text-right font-mono tabular-nums font-bold text-slate-800">
                         {p.C1}
                       </td>
-                      <td className="py-2.5 px-3 text-right font-mono text-slate-700">
+                      <td className="py-2.5 px-3 text-right font-mono tabular-nums text-slate-700">
                         {p.C2}x
                       </td>
-                      <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-800">
+                      <td className="py-2.5 px-3 text-right font-mono tabular-nums font-bold text-slate-800">
                         {p.C3}
                       </td>
-                      <td className="py-2.5 px-3 text-right font-mono font-bold text-bps-navy">
+                      <td className="py-2.5 px-3 text-right font-mono tabular-nums font-bold text-bps-navy">
                         {p.C4}
                       </td>
-                      <td className="py-2.5 px-3 text-right font-mono text-amber-700 font-bold">
+                      <td className="py-2.5 px-3 text-right font-mono tabular-nums text-amber-700 font-bold">
                         {p.C5} km
                       </td>
                       <td className="py-2.5 px-3.5 text-center">
                         <div className="flex items-center justify-center gap-1">
                           <button
                             onClick={() => handleOpenEditModal(p)}
-                            className="p-1 text-slate-400 hover:text-bps-blue hover:bg-slate-100 rounded-md transition-colors"
+                            aria-label={`Edit data ${p.nama}`}
+                            className="p-1 text-slate-400 hover:text-bps-blue hover:bg-slate-100 rounded-md transition-colors focus-ring"
                             title="Edit"
                           >
-                            <Edit className="w-3.5 h-3.5" />
+                            <Edit className="w-3.5 h-3.5" aria-hidden="true" />
                           </button>
                           <button
                             onClick={() => setDeleteConfirmId(p.id)}
-                            className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
+                            aria-label={`Hapus data ${p.nama}`}
+                            className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors focus-ring"
                             title="Hapus"
                           >
-                            <Trash2 className="w-3.5 h-3.5" />
+                            <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
                           </button>
                         </div>
                       </td>

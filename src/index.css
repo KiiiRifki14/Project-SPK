@@ -4,14 +4,29 @@
 
 @layer base {
   body {
-    @apply bg-slate-100 text-slate-800 antialiased font-sans;
+    @apply bg-[#F4F6F9] text-slate-800 antialiased font-sans selection:bg-bps-navy selection:text-white;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tight text-slate-900 text-balance;
+  }
+
+  /* Numeric alignment for tables & financial / calculation data */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-/* Custom Scrollbar */
+@layer utilities {
+  .focus-ring {
+    @apply focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bps-blue focus-visible:ring-offset-1;
+  }
+}
+
+/* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
@@ -24,14 +39,23 @@
   background: #94a3b8;
 }
 
-/* Animations */
+/* Animations conforming to Web Interface Guidelines */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(3px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.25s ease-out forwards;
+  animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-pulse,
+  .animate-ping {
+    animation: none !important;
+    transition: none !important;
+  }
 }
 
 /* Print Styling for Official BPS Berita Acara */
@@ -41,6 +65,7 @@
     color: #000000 !important;
     padding: 0 !important;
     margin: 0 !important;
+    font-size: 11pt !important;
   }
   .no-print {
     display: none !important;
@@ -58,7 +83,7 @@
   }
   @page {
     size: A4 portrait;
-    margin: 1.5cm;
+    margin: 1.2cm 1.5cm;
   }
 }
 
