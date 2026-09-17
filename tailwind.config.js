@@ -9,25 +9,33 @@ export default {
       colors: {
         bps: {
           navy: '#0B3C68',
-          'navy-dark': '#062544',
+          'navy-dark': '#062343',
           'navy-light': '#14538C',
+          'navy-subtle': '#E8F1F8',
           blue: '#00A3E0',
-          'blue-light': '#E0F4FC',
-          'blue-dark': '#0081B3',
-          emerald: '#10B981',
+          'blue-light': '#EBF7FD',
+          'blue-dark': '#007AA8',
+          emerald: '#059669',
           'emerald-light': '#ECFDF5',
-          amber: '#F59E0B',
+          'emerald-border': '#A7F3D0',
+          amber: '#D97706',
           'amber-light': '#FFFBEB',
-          rose: '#EF4444',
-          'rose-light': '#FEF2F2',
+          'amber-border': '#FDE68A',
+          rose: '#E11D48',
+          'rose-light': '#FFF1F2',
           slate: '#F8FAFC',
-          dark: '#0F172A',
-          muted: '#64748B',
-          border: '#E2E8F0'
+          surface: '#FFFFFF',
+          border: '#E2E8F0',
+          'border-light': '#F1F5F9'
         }
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['Inter', 'Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+      },
+      boxShadow: {
+        'card': '0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05)',
+        'card-hover': '0 10px 25px -5px rgba(11, 60, 104, 0.08), 0 8px 10px -6px rgba(11, 60, 104, 0.04)',
+        'elevated': '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04)',
       }
     },
   },

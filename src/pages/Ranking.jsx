@@ -9,7 +9,8 @@ import {
   Sliders, 
   Sparkles,
   ArrowRight,
-  TrendingUp
+  TrendingUp,
+  ChevronRight
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 
@@ -24,7 +25,6 @@ export default function Ranking({
   const kuotaLolos = pengaturan?.kuotaLolos || 5;
   const kuotaCadangan = pengaturan?.kuotaCadangan || 2;
 
-  // Ubah kuota secara interaktif
   const handleKuotaLolosChange = (val) => {
     const num = Math.max(1, parseInt(val) || 1);
     onUpdatePengaturan({ ...pengaturan, kuotaLolos: num });
@@ -35,7 +35,6 @@ export default function Ranking({
     onUpdatePengaturan({ ...pengaturan, kuotaCadangan: num });
   };
 
-  // Export Hasil Ranking ke Excel
   const handleExportExcel = () => {
     if (ranking.length === 0) {
       onShowAlert('Tidak ada data ranking untuk diekspor!', 'warning');
@@ -67,32 +66,32 @@ export default function Ranking({
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
+    <div className="space-y-6 animate-fade-in">
       {/* Header Halaman & Aksi Cepat */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-card">
         <div>
           <div className="flex items-center gap-2 text-bps-navy">
-            <Award className="w-6 h-6 text-bps-blue" />
-            <h1 className="text-xl sm:text-2xl font-extrabold">
-              Leaderboard Hasil Perangkingan & Rekomendasi
+            <Award className="w-5 h-5 text-bps-blue" />
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
+              Leaderboard Hasil Perangkingan Mitra
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Urutan prioritas penerimaan calon mitra statistik BPS Subang berdasarkan nilai preferensi akhir SAW (V).
+            Urutan prioritas penerimaan mitra lapangan BPS Subang berdasarkan nilai preferensi SAW tertinggi.
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             onClick={handleExportExcel}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
           >
-            <Download className="w-4 h-4" />
-            Export Ranking (.xlsx)
+            <Download className="w-3.5 h-3.5" />
+            Export Ranking
           </button>
           <button
             onClick={() => onNavigate('laporan')}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-md shadow-bps-navy/20 transition-all"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-md shadow-bps-navy/20 transition-all active:scale-95"
           >
             <Printer className="w-4 h-4 text-bps-blue" />
             Cetak SK Berita Acara
@@ -100,53 +99,53 @@ export default function Ranking({
         </div>
       </div>
 
-      {/* Kontrol Kuota Dinamis & Rekapitulasi */}
+      {/* Kontrol Kuota Dinamis */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Kontrol Kuota Lolos */}
-        <div className="bg-white p-5 rounded-2xl border border-emerald-200 shadow-sm space-y-2">
+        {/* Kuota Lolos */}
+        <div className="bg-white p-5 rounded-2xl border border-emerald-200 shadow-card space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-800 flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               Kuota Mitra Lolos
             </span>
-            <span className="text-xs px-2 py-0.5 rounded-md bg-emerald-100 font-bold text-emerald-800">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 font-extrabold text-emerald-800">
               {summary.totalLolos} Orang
             </span>
           </div>
-          <div className="flex items-center gap-3 pt-1">
+          <div className="flex items-center gap-3">
             <input
               type="number"
               min="1"
               max={ranking.length || 100}
               value={kuotaLolos}
               onChange={(e) => handleKuotaLolosChange(e.target.value)}
-              className="w-20 px-3 py-1.5 text-base font-bold text-emerald-800 rounded-xl border border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              className="w-20 px-3 py-1.5 text-base font-extrabold text-emerald-800 rounded-xl border border-emerald-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-mono text-center"
             />
             <p className="text-xs text-slate-500">
-              Peringkat <strong>#1 s.d. #{kuotaLolos}</strong> otomatis berstatus <strong>Lolos</strong>.
+              Peringkat <strong>#1 s.d. #{kuotaLolos}</strong> otomatis berstatus <strong>Lolos Seleksi</strong>.
             </p>
           </div>
         </div>
 
-        {/* Kontrol Kuota Cadangan */}
-        <div className="bg-white p-5 rounded-2xl border border-amber-200 shadow-sm space-y-2">
+        {/* Kuota Cadangan */}
+        <div className="bg-white p-5 rounded-2xl border border-amber-200 shadow-card space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-amber-800 flex items-center gap-1.5">
               <TrendingUp className="w-4 h-4 text-amber-600" />
               Kuota Cadangan
             </span>
-            <span className="text-xs px-2 py-0.5 rounded-md bg-amber-100 font-bold text-amber-800">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 font-extrabold text-amber-800">
               {summary.totalCadangan} Orang
             </span>
           </div>
-          <div className="flex items-center gap-3 pt-1">
+          <div className="flex items-center gap-3">
             <input
               type="number"
               min="0"
               max={ranking.length || 100}
               value={kuotaCadangan}
               onChange={(e) => handleKuotaCadanganChange(e.target.value)}
-              className="w-20 px-3 py-1.5 text-base font-bold text-amber-800 rounded-xl border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-20 px-3 py-1.5 text-base font-extrabold text-amber-800 rounded-xl border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 font-mono text-center"
             />
             <p className="text-xs text-slate-500">
               Peringkat <strong>#{kuotaLolos + 1} s.d. #{kuotaLolos + kuotaCadangan}</strong> sebagai <strong>Cadangan</strong>.
@@ -154,26 +153,26 @@ export default function Ranking({
           </div>
         </div>
 
-        {/* Jumlah Tidak Lolos */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 flex flex-col justify-between">
+        {/* Tidak Lolos */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-3 flex flex-col justify-between">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1.5">
               <XCircle className="w-4 h-4 text-slate-400" />
               Tidak Lolos
             </span>
-            <span className="text-xs px-2 py-0.5 rounded-md bg-slate-100 font-bold text-slate-600">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 font-extrabold text-slate-600">
               {summary.totalTidakLolos} Orang
             </span>
           </div>
-          <p className="text-xs text-slate-500">
-            Peringkat <strong>#{kuotaLolos + kuotaCadangan + 1}</strong> ke bawah dinyatakan tidak memenuhi kuota rekrutmen.
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Peringkat <strong>#{kuotaLolos + kuotaCadangan + 1}</strong> ke bawah dinyatakan belum memenuhi alokasi kuota rekrutmen.
           </p>
         </div>
       </div>
 
-      {/* Tabel Leaderboard Perangkingan */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+      {/* Tabel Leaderboard */}
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div>
             <h2 className="text-sm font-bold text-bps-navy">Daftar Peringkat Akhir Seleksi Mitra Lapangan</h2>
             <p className="text-xs text-slate-500">Urutan terhitung otomatis dari skor preferensi V tertinggi ke terendah</p>
@@ -187,16 +186,16 @@ export default function Ranking({
           <table className="w-full text-left text-xs sm:text-sm">
             <thead className="bg-slate-50 text-slate-600 text-xs uppercase tracking-wider border-b border-slate-200">
               <tr>
-                <th className="py-3.5 px-4 w-16 text-center">Rank</th>
-                <th className="py-3.5 px-4">Nama Pelamar & NIK</th>
-                <th className="py-3.5 px-4">Kecamatan</th>
-                <th className="py-3.5 px-4 text-center">Ujian (C1)</th>
-                <th className="py-3.5 px-4 text-center">Survei (C2)</th>
-                <th className="py-3.5 px-4 text-center">CAPI (C3)</th>
-                <th className="py-3.5 px-4 text-center">Pendidikan (C4)</th>
-                <th className="py-3.5 px-4 text-center">Jarak (C5)</th>
-                <th className="py-3.5 px-4 text-center font-extrabold">Skor V</th>
-                <th className="py-3.5 px-4 w-36 text-center">Status Rekomendasi</th>
+                <th className="py-3 px-4 w-16 text-center">Rank</th>
+                <th className="py-3 px-4">Nama Pelamar & NIK</th>
+                <th className="py-3 px-4">Kecamatan</th>
+                <th className="py-3 px-4 text-center">Ujian (C1)</th>
+                <th className="py-3 px-4 text-center">Survei (C2)</th>
+                <th className="py-3 px-4 text-center">CAPI (C3)</th>
+                <th className="py-3 px-4 text-center">Pendidikan (C4)</th>
+                <th className="py-3 px-4 text-center">Jarak (C5)</th>
+                <th className="py-3 px-4 text-center font-extrabold">Skor V</th>
+                <th className="py-3 px-4 w-36 text-center">Status Rekomendasi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -209,22 +208,19 @@ export default function Ranking({
                     key={item.id} 
                     className={`transition-colors ${
                       isLolos 
-                        ? 'bg-emerald-50/30 hover:bg-emerald-50/60 border-l-4 border-l-emerald-500' 
+                        ? 'bg-emerald-50/35 hover:bg-emerald-50/60 border-l-4 border-l-emerald-500' 
                         : isCadangan 
-                        ? 'bg-amber-50/30 hover:bg-amber-50/60 border-l-4 border-l-amber-500' 
+                        ? 'bg-amber-50/35 hover:bg-amber-50/60 border-l-4 border-l-amber-500' 
                         : 'hover:bg-slate-50/70 border-l-4 border-l-slate-200'
                     }`}
                   >
-                    {/* Ranking */}
+                    {/* Rank Medals */}
                     <td className="py-3 px-4 text-center">
                       <span className={`w-7 h-7 rounded-full inline-flex items-center justify-center font-extrabold text-xs ${
-                        item.ranking === 1
-                          ? 'bg-amber-400 text-slate-900 shadow-sm'
-                          : item.ranking === 2
-                          ? 'bg-slate-300 text-slate-800'
-                          : item.ranking === 3
-                          ? 'bg-amber-600/30 text-amber-900'
-                          : 'bg-slate-100 text-slate-600'
+                        item.ranking === 1 ? 'bg-amber-400 text-slate-950 shadow-sm' :
+                        item.ranking === 2 ? 'bg-slate-300 text-slate-800' :
+                        item.ranking === 3 ? 'bg-amber-600/30 text-amber-900' :
+                        'bg-slate-100 text-slate-600'
                       }`}>
                         #{item.ranking}
                       </span>
@@ -243,7 +239,7 @@ export default function Ranking({
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-400 font-mono">NIK: {item.nik}</p>
+                      <p className="text-[11px] text-slate-400 font-mono">NIK: {item.nik}</p>
                     </td>
 
                     {/* Kecamatan */}
@@ -251,20 +247,20 @@ export default function Ranking({
                       {item.kecamatan}
                     </td>
 
-                    {/* Parameter C1 - C5 */}
-                    <td className="py-3 px-4 text-center font-semibold text-slate-700">
+                    {/* Nilai Parameters */}
+                    <td className="py-3 px-4 text-center font-semibold text-slate-700 font-mono">
                       {item.rawApplicant?.C1}
                     </td>
-                    <td className="py-3 px-4 text-center text-slate-600">
+                    <td className="py-3 px-4 text-center text-slate-600 font-mono">
                       {item.rawApplicant?.C2}x
                     </td>
-                    <td className="py-3 px-4 text-center text-slate-600">
+                    <td className="py-3 px-4 text-center text-slate-600 font-mono">
                       {item.rawApplicant?.C3}
                     </td>
                     <td className="py-3 px-4 text-center text-slate-600">
                       {item.rawApplicant?.pendidikan} ({item.rawApplicant?.C4})
                     </td>
-                    <td className="py-3 px-4 text-center font-mono text-amber-700 font-semibold">
+                    <td className="py-3 px-4 text-center font-mono text-amber-700 font-bold">
                       {item.rawApplicant?.C5} km
                     </td>
 
@@ -273,7 +269,7 @@ export default function Ranking({
                       {item.scoreV.toFixed(4)}
                     </td>
 
-                    {/* Status Rekomendasi */}
+                    {/* Status Badge */}
                     <td className="py-3 px-4 text-center">
                       <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${item.badgeBg}`}>
                         {isLolos && <CheckCircle2 className="w-3.5 h-3.5" />}

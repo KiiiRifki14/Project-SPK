@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import Navbar from './components/Navbar.jsx';
 import Sidebar from './components/Sidebar.jsx';
 import Alert from './components/Alert.jsx';
@@ -12,7 +12,7 @@ import Ranking from './pages/Ranking.jsx';
 import Laporan from './pages/Laporan.jsx';
 
 import { storageService } from './services/storageService.js';
-import { calculateSAW } from './services/sawCalculator.js';
+import { calculateSAW, validateBobot } from './services/sawCalculator.js';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -20,7 +20,7 @@ export default function App() {
   const [alert, setAlert] = useState(null);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
 
-  // State Data Tersimpan
+  // State Data Tersimpan di LocalStorage
   const [kriteria, setKriteria] = useState(() => {
     storageService.initStorage();
     return storageService.getKriteria();
@@ -34,12 +34,17 @@ export default function App() {
     return storageService.getPengaturan();
   });
 
-  // Notifikasi helper
+  // Notifikasi Helper
   const showAlert = (message, type = 'info') => {
     setAlert({ message, type });
   };
 
-  // Kalkulasi Live Reactive SAW (Otomatis terhitung seketika tanpa delay saat data/bobot/kuota berubah)
+  // Validasi Bobot
+  const bobotValidation = useMemo(() => {
+    return validateBobot(kriteria);
+  }, [kriteria]);
+
+  // Kalkulasi Live Reactive SAW
   const sawResult = useMemo(() => {
     return calculateSAW(pelamar, kriteria, {
       kuotaLolos: pengaturan?.kuotaLolos ?? 5,
@@ -47,32 +52,28 @@ export default function App() {
     });
   }, [pelamar, kriteria, pengaturan?.kuotaLolos, pengaturan?.kuotaCadangan]);
 
-  // Handler Update Kriteria
+  // Handlers
   const handleUpdateKriteria = (newKriteria) => {
     setKriteria(newKriteria);
     storageService.saveKriteria(newKriteria);
   };
 
-  // Handler Update Pelamar
   const handleSavePelamar = (newPelamar) => {
     setPelamar(newPelamar);
     storageService.savePelamar(newPelamar);
   };
 
-  // Handler Update Pengaturan
   const handleUpdatePengaturan = (newPengaturan) => {
     setPengaturan(newPengaturan);
     storageService.savePengaturan(newPengaturan);
   };
 
-  // Muat Ulang 8 Data Sampel Subang
   const handleLoadSample = () => {
     const sample = storageService.loadSampleSubang();
     setPelamar(sample);
     showAlert('8 data kandidat pelamar asli Kabupaten Subang berhasil dimuat kembali!', 'success');
   };
 
-  // Reset Total Sistem
   const handleConfirmReset = () => {
     const resetData = storageService.resetToDefault();
     setKriteria(resetData.kriteria);
@@ -83,34 +84,34 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans">
-      {/* Toast Alert */}
+    <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row font-sans selection:bg-bps-blue selection:text-white">
+      {/* Toast Alert Pop-up */}
       <Alert alert={alert} onClose={() => setAlert(null)} />
 
-      {/* Header Navbar */}
-      <Navbar
-        onResetData={() => setIsResetModalOpen(true)}
-        onLoadSample={handleLoadSample}
-        activeRole={activeRole}
-        onChangeRole={(role) => {
-          setActiveRole(role);
-          showAlert(`Mode beralih ke peran: ${role === 'superadmin' ? 'Superadmin BPS' : 'Panitia Seleksi'}`, 'info');
-        }}
-        summary={sawResult?.summary}
+      {/* Docked Left Sidebar */}
+      <Sidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        pelamarCount={pelamar.length}
+        kriteriaCount={kriteria.length}
+        bobotValid={bobotValidation.isValid}
       />
 
-      {/* Konten Utama: Sidebar + Page Container */}
-      <div className="flex-1 flex flex-col md:flex-row max-w-7xl w-full mx-auto">
-        {/* Sidebar Navigasi */}
-        <Sidebar
+      {/* Right Canvas: Navbar + Main Dynamic Content */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <Navbar
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          pelamarCount={pelamar.length}
-          kriteriaCount={kriteria.length}
+          onResetData={() => setIsResetModalOpen(true)}
+          onLoadSample={handleLoadSample}
+          activeRole={activeRole}
+          onChangeRole={(role) => {
+            setActiveRole(role);
+            showAlert(`Mode beralih ke peran: ${role === 'superadmin' ? 'Superadmin BPS' : 'Panitia Seleksi'}`, 'info');
+          }}
+          summary={sawResult?.summary}
         />
 
-        {/* Dynamic Page Viewer */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 min-w-0">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1500px] w-full mx-auto">
           {activeTab === 'dashboard' && (
             <Dashboard
               pelamar={pelamar}
@@ -185,13 +186,13 @@ export default function App() {
           <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
             <button
               onClick={() => setIsResetModalOpen(false)}
-              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100"
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors"
             >
               Batal
             </button>
             <button
               onClick={handleConfirmReset}
-              className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 text-white hover:bg-rose-700 shadow-md"
+              className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 text-white hover:bg-rose-700 shadow-md transition-all"
             >
               Ya, Reset ke Data Awal
             </button>

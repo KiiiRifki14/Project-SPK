@@ -20,20 +20,16 @@ export default function Laporan({
   const [isEditingSettings, setIsEditingSettings] = useState(false);
   const [formSettings, setFormSettings] = useState(pengaturan || {});
 
-  const { ranking = [], summary = {} } = sawResult || {};
+  const { ranking = [] } = sawResult || {};
   const kuotaLolos = pengaturan?.kuotaLolos || 5;
-  const kuotaCadangan = pengaturan?.kuotaCadangan || 2;
 
-  // Pisahkan pelamar Lolos dan Cadangan
   const listLolos = ranking.filter(r => r.status === 'Lolos');
   const listCadangan = ranking.filter(r => r.status === 'Cadangan');
 
-  // Trigger browser print
   const handlePrint = () => {
     window.print();
   };
 
-  // Simpan perubahan pengaturan surat
   const handleSaveSettings = (e) => {
     e.preventDefault();
     onUpdatePengaturan(formSettings);
@@ -42,22 +38,22 @@ export default function Laporan({
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Action Toolbar (Tidak Dicetak) */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm no-print">
+    <div className="space-y-6 animate-fade-in">
+      {/* Action Toolbar (No-Print) */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-card no-print">
         <div>
           <div className="flex items-center gap-2 text-bps-navy">
-            <Printer className="w-6 h-6 text-bps-blue" />
-            <h1 className="text-xl sm:text-2xl font-extrabold">
-              Berita Acara & Laporan Penetapan Hasil Seleksi
+            <Printer className="w-5 h-5 text-bps-blue" />
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
+              Berita Acara Resmi Hasil Rekrutmen Mitra
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Dokumen resmi penetapan kelulusan calon mitra statistik berformat kop surat BPS Kabupaten Subang siap cetak atau simpan ke PDF.
+            Format resmi surat dinas BPS Kabupaten Subang. Siap dicetak langsung atau disimpan ke format PDF (Ctrl + P).
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           <button
             onClick={() => setIsEditingSettings(!isEditingSettings)}
             className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors border border-slate-200"
@@ -67,7 +63,7 @@ export default function Laporan({
           </button>
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 px-5 py-2 text-xs sm:text-sm font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-md shadow-bps-navy/20 transition-all transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-md shadow-bps-navy/20 transition-all active:scale-95"
           >
             <Printer className="w-4 h-4 text-bps-blue" />
             Cetak / Simpan PDF
@@ -77,10 +73,10 @@ export default function Laporan({
 
       {/* Form Edit Pengaturan Surat (No-Print) */}
       {isEditingSettings && (
-        <div className="bg-white p-6 rounded-2xl border border-bps-blue/30 shadow-md space-y-4 no-print animate-in fade-in">
+        <div className="bg-white p-6 rounded-2xl border border-bps-blue/30 shadow-card space-y-4 no-print animate-fade-in">
           <h3 className="text-sm font-bold text-bps-navy flex items-center gap-2">
             <Settings className="w-4 h-4 text-bps-blue" />
-            Pengaturan Informasi Surat Resmi
+            Pengaturan Informasi Lembar Surat Resmi
           </h3>
           <form onSubmit={handleSaveSettings} className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
             <div>
@@ -93,7 +89,7 @@ export default function Laporan({
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-slate-600 mb-1">Nama Periode Kegiatan / Sensus</label>
+              <label className="block text-xs font-semibold text-slate-600 mb-1">Nama Periode Sensus / Survei</label>
               <input
                 type="text"
                 value={formSettings.namaPeriode || ''}
@@ -150,7 +146,7 @@ export default function Laporan({
                 type="submit"
                 className="px-5 py-2 text-xs font-bold bg-bps-navy text-white hover:bg-bps-navy-light rounded-xl shadow"
               >
-                Simpan Pengaturan
+                Simpan Perubahan
               </button>
             </div>
           </form>
@@ -158,13 +154,12 @@ export default function Laporan({
       )}
 
       {/* ========================================================== */}
-      {/* LEMBAR BERITA ACARA RESMI SIAP CETAK (A4 PRINTABLE PAPER)   */}
+      {/* LEMBAR DOKUMEN BERITA ACARA RESMI SIAP CETAK (A4 PAPER)    */}
       {/* ========================================================== */}
-      <div className="bg-white p-8 sm:p-12 rounded-2xl border border-slate-300 shadow-xl max-w-4xl mx-auto print-container text-slate-900 font-serif leading-relaxed">
+      <div className="bg-white p-8 sm:p-12 rounded-3xl border border-slate-300 shadow-elevated max-w-4xl mx-auto print-container text-slate-900 leading-relaxed font-sans">
         
-        {/* KOP SURAT RESMI BPS KABUPATEN SUBANG */}
+        {/* KOP SURAT RESMI */}
         <div className="flex items-center gap-5 border-b-4 border-double border-slate-900 pb-4 mb-6">
-          {/* Logo BPS */}
           <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center">
             <svg viewBox="0 0 100 100" className="w-16 h-16 fill-current text-bps-navy">
               <polygon points="50,15 90,80 10,80" fill="#0B3C68" />
@@ -174,38 +169,37 @@ export default function Laporan({
             </svg>
           </div>
 
-          {/* Teks Kop Surat */}
           <div className="text-center flex-1 pr-6">
-            <h2 className="text-xl font-bold tracking-wider font-sans uppercase text-slate-900 leading-tight">
+            <h2 className="text-lg font-bold tracking-wider uppercase text-slate-900 leading-tight">
               BADAN PUSAT STATISTIK
             </h2>
-            <h2 className="text-2xl font-extrabold tracking-tight font-sans uppercase text-bps-navy">
+            <h2 className="text-2xl font-black tracking-tight uppercase text-bps-navy">
               KABUPATEN SUBANG
             </h2>
-            <p className="text-xs font-sans text-slate-700 mt-1 leading-normal">
+            <p className="text-xs text-slate-700 mt-1 leading-normal">
               Jl. Mayjen Sutoyo No. 12, Karanganyar, Kec. Subang, Kabupaten Subang, Jawa Barat 41211
             </p>
-            <p className="text-xs font-sans text-slate-600">
+            <p className="text-xs text-slate-600">
               Telepon: (0260) 411032 • Pos-el: bps3213@bps.go.id • Laman: subangkab.bps.go.id
             </p>
           </div>
         </div>
 
-        {/* JUDUL DOKUMEN BERITA ACARA */}
+        {/* JUDUL DOKUMEN */}
         <div className="text-center my-6 space-y-1">
-          <h2 className="text-base sm:text-lg font-bold uppercase tracking-wide font-sans text-slate-900 underline">
+          <h2 className="text-base sm:text-lg font-bold uppercase tracking-wide text-slate-900 underline">
             BERITA ACARA PENETAPAN HASIL SELEKSI MITRA STATISTIK
           </h2>
           <p className="text-xs font-mono text-slate-700">
             NOMOR: {pengaturan?.nomorSK || 'B-045/32130/VS.100/2026'}
           </p>
-          <p className="text-xs font-sans text-slate-600 uppercase font-semibold">
+          <p className="text-xs text-slate-600 uppercase font-semibold">
             TENTANG: HASIL AKHIR PENILAIAN SELEKSI CALON MITRA STATISTIK LAPANGAN METODE SAW
           </p>
         </div>
 
-        {/* KATA PENGANTAR / PEMBUKA */}
-        <div className="text-xs sm:text-sm text-justify space-y-3 font-sans text-slate-800">
+        {/* PEMBUKA */}
+        <div className="text-xs sm:text-sm text-justify space-y-3 text-slate-800">
           <p>
             Pada hari ini, tanggal <strong>{new Date(pengaturan?.tanggalSK || Date.now()).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</strong>, 
             bertempat di Kantor Badan Pusat Statistik Kabupaten Subang, Panitia Seleksi Rekrutmen Calon Mitra Statistik telah menyelesaikan 
@@ -217,12 +211,12 @@ export default function Laporan({
           </p>
         </div>
 
-        {/* TABEL A: DAFTAR MITRA DINYATAKAN LOLOS */}
+        {/* TABEL A: DAFTAR MITRA LOLOS */}
         <div className="my-6 space-y-2">
-          <h3 className="text-xs sm:text-sm font-bold font-sans uppercase tracking-wide text-bps-navy">
+          <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wide text-bps-navy">
             A. DAFTAR CALON MITRA STATISTIK YANG DINYATAKAN LOLOS SELEKSI (KUOTA UTAMA)
           </h3>
-          <table className="w-full border-collapse border border-slate-900 text-xs font-sans">
+          <table className="w-full border-collapse border border-slate-900 text-xs">
             <thead>
               <tr className="bg-slate-100 text-slate-900 text-center font-bold">
                 <th className="border border-slate-900 py-2 px-2 w-10">No</th>
@@ -263,10 +257,10 @@ export default function Laporan({
         {/* TABEL B: DAFTAR MITRA CADANGAN */}
         {listCadangan.length > 0 && (
           <div className="my-6 space-y-2">
-            <h3 className="text-xs sm:text-sm font-bold font-sans uppercase tracking-wide text-amber-900">
+            <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wide text-amber-900">
               B. DAFTAR CALON MITRA STATISTIK CADANGAN (PENGGANTI)
             </h3>
-            <table className="w-full border-collapse border border-slate-900 text-xs font-sans">
+            <table className="w-full border-collapse border border-slate-900 text-xs">
               <thead>
                 <tr className="bg-slate-100 text-slate-900 text-center font-bold">
                   <th className="border border-slate-900 py-2 px-2 w-10">No</th>
@@ -297,17 +291,16 @@ export default function Laporan({
           </div>
         )}
 
-        {/* KATA PENUTUP */}
-        <div className="text-xs sm:text-sm text-justify font-sans text-slate-800 mt-4 leading-relaxed">
+        {/* PENUTUP */}
+        <div className="text-xs sm:text-sm text-justify text-slate-800 mt-4 leading-relaxed">
           <p>
             Demikian Berita Acara ini dibuat dengan sebenarnya berdasarkan hasil komputasi analitis yang objektif dan transparan 
             untuk dapat dipergunakan sebagaimana mestinya dalam penerbitan Surat Keputusan (SK) Pengangkatan Mitra Statistik Lapangan BPS Kabupaten Subang.
           </p>
         </div>
 
-        {/* KOLOM TANDA TANGAN RESMI */}
-        <div className="mt-12 pt-6 grid grid-cols-2 gap-8 text-xs sm:text-sm font-sans text-center">
-          {/* Tanda Tangan Panitia */}
+        {/* KOLOM TANDA TANGAN */}
+        <div className="mt-12 pt-6 grid grid-cols-2 gap-8 text-xs sm:text-sm text-center">
           <div className="space-y-16">
             <div>
               <p className="text-slate-600">Panitia Seleksi Rekrutmen,</p>
@@ -321,7 +314,6 @@ export default function Laporan({
             </div>
           </div>
 
-          {/* Tanda Tangan Kepala BPS */}
           <div className="space-y-16">
             <div>
               <p className="text-slate-600">Subang, {new Date(pengaturan?.tanggalSK || Date.now()).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>

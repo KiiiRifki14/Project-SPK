@@ -11,7 +11,7 @@ import {
   Trash2, 
   FileSpreadsheet,
   RotateCcw,
-  Check,
+  X,
   AlertCircle
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
@@ -58,14 +58,12 @@ export default function Pelamar({
     return matchSearch && matchKecamatan;
   });
 
-  // Buka modal Tambah
   const handleOpenAddModal = () => {
     setEditingPelamar(null);
     setFormData(initialFormState);
     setIsModalOpen(true);
   };
 
-  // Buka modal Edit
   const handleOpenEditModal = (p) => {
     setEditingPelamar(p);
     setFormData({
@@ -84,7 +82,6 @@ export default function Pelamar({
     setIsModalOpen(true);
   };
 
-  // Ubah pilihan pendidikan otomatis menyesuaikan skor C4
   const handlePendidikanChange = (val) => {
     const opt = PENDIDIKAN_OPTIONS.find(o => o.value === val);
     setFormData(prev => ({
@@ -94,7 +91,6 @@ export default function Pelamar({
     }));
   };
 
-  // Simpan Tambah / Edit
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
@@ -120,7 +116,6 @@ export default function Pelamar({
       );
       onShowAlert(`Data pelamar "${formData.nama}" berhasil diperbarui`, 'success');
     } else {
-      // Cek NIK duplikat
       if (pelamar.some(p => p.nik === formData.nik)) {
         onShowAlert(`Pelamar dengan NIK ${formData.nik} sudah terdaftar!`, 'error');
         return;
@@ -131,22 +126,20 @@ export default function Pelamar({
         C5: c5Val
       };
       updatedList = [newPelamar, ...pelamar];
-      onShowAlert(`Pelamar "${formData.nama}" berhasil ditambahkan ke database`, 'success');
+      onShowAlert(`Pelamar "${formData.nama}" berhasil ditambahkan`, 'success');
     }
 
     onSavePelamar(updatedList);
     setIsModalOpen(false);
   };
 
-  // Hapus Pelamar
   const handleDeletePelamar = (id) => {
     const updatedList = pelamar.filter(p => p.id !== id);
     onSavePelamar(updatedList);
     setDeleteConfirmId(null);
-    onShowAlert('Data pelamar berhasil dihapus dari sistem', 'info');
+    onShowAlert('Data pelamar berhasil dihapus', 'info');
   };
 
-  // Export ke Excel (.xlsx) via SheetJS
   const handleExportExcel = () => {
     if (pelamar.length === 0) {
       onShowAlert('Tidak ada data pelamar untuk diekspor!', 'warning');
@@ -172,13 +165,11 @@ export default function Pelamar({
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Data Pelamar BPS');
     
-    // Download file
     const dateStr = new Date().toISOString().split('T')[0];
     XLSX.writeFile(workbook, `Data_Pelamar_Mitra_BPS_Subang_${dateStr}.xlsx`);
     onShowAlert('File Excel data pelamar berhasil diunduh', 'success');
   };
 
-  // Import dari Excel / CSV
   const handleImportExcel = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -228,55 +219,49 @@ export default function Pelamar({
   };
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-300">
-      {/* Header Halaman & Aksi Cepat */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+    <div className="space-y-6 animate-fade-in">
+      {/* Header Halaman & Action Toolbar */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-card">
         <div>
           <div className="flex items-center gap-2 text-bps-navy">
-            <Users className="w-6 h-6 text-bps-blue" />
-            <h1 className="text-xl sm:text-2xl font-extrabold">
-              Manajemen Data Pelamar Mitra Statistik
+            <Users className="w-5 h-5 text-bps-blue" />
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
+              Manajemen Data Calon Mitra Statistik
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Pengelolaan data calon mitra lapangan BPS Subang, input nilai seleksi C1 - C5, serta fitur import/export spreadsheet.
+            Data pelamar sensus lapangan BPS Subang, input nilai seleksi C1 - C5, dan impor/ekspor spreadsheet.
           </p>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap items-center gap-2">
-          {/* Tambah Pelamar */}
+        {/* Buttons */}
+        <div className="flex flex-wrap items-center gap-2.5">
           <button
             onClick={handleOpenAddModal}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-md shadow-bps-navy/20 transition-all transform hover:-translate-y-0.5"
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-md shadow-bps-navy/20 transition-all active:scale-95"
           >
             <UserPlus className="w-4 h-4 text-bps-blue" />
             Tambah Pelamar
           </button>
 
-          {/* Muat Sampel Subang */}
           <button
             onClick={onLoadSample}
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-bps-navy bg-bps-blue/10 hover:bg-bps-blue/20 transition-colors"
-            title="Muat 8 data realistis warga Subang"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-bps-navy bg-bps-blue-light hover:bg-blue-100 border border-bps-blue/20 transition-colors"
           >
-            <Sparkles className="w-4 h-4 text-bps-blue" />
+            <Sparkles className="w-3.5 h-3.5 text-bps-blue" />
             Muat Sampel Subang
           </button>
 
-          {/* Export Excel */}
           <button
             onClick={handleExportExcel}
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
-            title="Unduh data ke file Excel (.xlsx)"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
           >
-            <Download className="w-4 h-4" />
+            <Download className="w-3.5 h-3.5" />
             Export Excel
           </button>
 
-          {/* Import Excel */}
-          <label className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors cursor-pointer">
-            <Upload className="w-4 h-4 text-slate-500" />
+          <label className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors cursor-pointer">
+            <Upload className="w-3.5 h-3.5 text-slate-500" />
             <span>Import Excel</span>
             <input
               type="file"
@@ -289,8 +274,8 @@ export default function Pelamar({
         </div>
       </div>
 
-      {/* Filter & Pencarian */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3">
+      {/* Filter & Search Bar */}
+      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-card flex flex-col sm:flex-row items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative w-full sm:w-80">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -299,8 +284,16 @@ export default function Pelamar({
             placeholder="Cari nama pelamar atau NIK..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-bps-blue transition-all"
+            className="w-full pl-9 pr-8 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-bps-blue transition-all"
           />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
         </div>
 
         {/* Dropdown Kecamatan Subang */}
@@ -310,7 +303,7 @@ export default function Pelamar({
           <select
             value={selectedKecamatan}
             onChange={(e) => setSelectedKecamatan(e.target.value)}
-            className="w-full sm:w-48 px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-bps-blue"
+            className="w-full sm:w-52 px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-bps-blue"
           >
             <option value="Semua">Semua Kecamatan ({pelamar.length})</option>
             {KECAMATAN_SUBANG.map(kec => (
@@ -321,104 +314,112 @@ export default function Pelamar({
       </div>
 
       {/* Tabel Data Pelamar */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
+      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card overflow-hidden">
+        <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="text-xs text-slate-500 font-medium">
             Menampilkan <strong>{filteredPelamar.length}</strong> dari total {pelamar.length} pelamar
           </div>
           {searchTerm && (
-            <button
-              onClick={() => setSearchTerm('')}
-              className="text-xs text-bps-blue hover:underline font-semibold"
-            >
-              Reset Pencarian
-            </button>
+            <span className="text-xs text-bps-blue font-semibold">
+              Filter aktif: "{searchTerm}"
+            </span>
           )}
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full text-left text-xs sm:text-sm">
             <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
               <tr>
                 <th className="py-3 px-4 w-12 text-center">No</th>
-                <th className="py-3 px-4">Nama Pelamar & NIK</th>
+                <th className="py-3 px-4">Nama & NIK</th>
                 <th className="py-3 px-4">Kecamatan</th>
                 <th className="py-3 px-4 text-center">Pendidikan</th>
-                <th className="py-3 px-4 text-center" title="Nilai Ujian Tertulis (0-100)">C1 (Ujian)</th>
-                <th className="py-3 px-4 text-center" title="Pengalaman Survei BPS (kali)">C2 (Survei)</th>
-                <th className="py-3 px-4 text-center" title="Penguasaan Aplikasi CAPI (0-100)">C3 (CAPI)</th>
-                <th className="py-3 px-4 text-center" title="Skor Jenjang Pendidikan (2-4)">C4 (Skor)</th>
-                <th className="py-3 px-4 text-center" title="Jarak Domisili ke Wilayah Tugas (KM)">C5 (Jarak)</th>
+                <th className="py-3 px-4 text-center" title="Nilai Ujian (0-100)">C1 (Ujian)</th>
+                <th className="py-3 px-4 text-center" title="Pengalaman Survei (kali)">C2 (Survei)</th>
+                <th className="py-3 px-4 text-center" title="Uji CAPI (0-100)">C3 (CAPI)</th>
+                <th className="py-3 px-4 text-center" title="Skor Pendidikan (2-4)">C4 (Skor)</th>
+                <th className="py-3 px-4 text-center" title="Jarak ke Wilayah (KM)">C5 (Jarak)</th>
                 <th className="py-3 px-4 w-24 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredPelamar.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="py-8 text-center text-slate-400 text-xs">
-                    Tidak ditemukan data pelamar yang sesuai kriteria pencarian.
+                  <td colSpan={10} className="py-12 text-center text-slate-400 text-xs">
+                    Tidak ditemukan data pelamar yang cocok.
                   </td>
                 </tr>
               ) : (
-                filteredPelamar.map((p, idx) => (
-                  <tr key={p.id || idx} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3 px-4 text-center text-xs text-slate-400 font-mono">
-                      {idx + 1}
-                    </td>
-                    <td className="py-3 px-4">
-                      <p className="font-bold text-slate-800">{p.nama}</p>
-                      <p className="text-xs text-slate-400 font-mono">NIK: {p.nik}</p>
-                    </td>
-                    <td className="py-3 px-4 text-slate-700 font-medium">
-                      {p.kecamatan}
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <span className="px-2 py-0.5 rounded text-xs font-semibold bg-slate-100 text-slate-700">
-                        {p.pendidikan}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-center font-semibold text-slate-800">
-                      {p.C1}
-                    </td>
-                    <td className="py-3 px-4 text-center text-slate-700">
-                      {p.C2}x
-                    </td>
-                    <td className="py-3 px-4 text-center font-semibold text-slate-800">
-                      {p.C3}
-                    </td>
-                    <td className="py-3 px-4 text-center font-bold text-bps-navy">
-                      {p.C4}
-                    </td>
-                    <td className="py-3 px-4 text-center font-mono text-amber-700 font-semibold">
-                      {p.C5} km
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <button
-                          onClick={() => handleOpenEditModal(p)}
-                          className="p-1.5 text-slate-400 hover:text-bps-blue hover:bg-slate-100 rounded-lg transition-colors"
-                          title="Edit Pelamar"
-                        >
-                          <Edit className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => setDeleteConfirmId(p.id)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
-                          title="Hapus Pelamar"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                filteredPelamar.map((p, idx) => {
+                  const initials = p.nama?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'PL';
+
+                  return (
+                    <tr key={p.id || idx} className="hover:bg-slate-50/70 transition-colors">
+                      <td className="py-3 px-4 text-center text-xs text-slate-400 font-mono">
+                        {idx + 1}
+                      </td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-slate-100 text-bps-navy font-bold text-[10px] flex items-center justify-center flex-shrink-0 border border-slate-200">
+                            {initials}
+                          </div>
+                          <div>
+                            <p className="font-bold text-slate-800">{p.nama}</p>
+                            <p className="text-[11px] text-slate-400 font-mono">NIK: {p.nik}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 text-slate-600 font-medium">
+                        {p.kecamatan}
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700">
+                          {p.pendidikan}
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-center font-bold text-slate-800 font-mono">
+                        {p.C1}
+                      </td>
+                      <td className="py-3 px-4 text-center text-slate-700 font-mono">
+                        {p.C2}x
+                      </td>
+                      <td className="py-3 px-4 text-center font-bold text-slate-800 font-mono">
+                        {p.C3}
+                      </td>
+                      <td className="py-3 px-4 text-center font-bold text-bps-navy font-mono">
+                        {p.C4}
+                      </td>
+                      <td className="py-3 px-4 text-center font-mono text-amber-700 font-bold">
+                        {p.C5} km
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <div className="flex items-center justify-center gap-1">
+                          <button
+                            onClick={() => handleOpenEditModal(p)}
+                            className="p-1.5 text-slate-400 hover:text-bps-blue hover:bg-slate-100 rounded-lg transition-colors"
+                            title="Edit"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => setDeleteConfirmId(p.id)}
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                            title="Hapus"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Modal Form Tambah / Edit Pelamar */}
+      {/* Modal Form Tambah / Edit */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -427,7 +428,6 @@ export default function Pelamar({
       >
         <form onSubmit={handleFormSubmit} className="space-y-4 text-xs sm:text-sm">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* NIK */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 Nomor Induk Kependudukan (NIK) *
@@ -438,12 +438,11 @@ export default function Pelamar({
                 maxLength={16}
                 value={formData.nik}
                 onChange={(e) => setFormData({ ...formData, nik: e.target.value })}
-                placeholder="Contoh: 3213012903980001"
+                placeholder="3213xxxxxxxxxxxx"
                 className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
               />
             </div>
 
-            {/* Nama Lengkap */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 Nama Lengkap *
@@ -458,7 +457,6 @@ export default function Pelamar({
               />
             </div>
 
-            {/* Jenis Kelamin */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 Jenis Kelamin
@@ -473,10 +471,9 @@ export default function Pelamar({
               </select>
             </div>
 
-            {/* No HP */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
-                Nomor WhatsApp / HP
+                Nomor HP / WhatsApp
               </label>
               <input
                 type="text"
@@ -487,7 +484,6 @@ export default function Pelamar({
               />
             </div>
 
-            {/* Kecamatan Domisili */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 Kecamatan Domisili Subang *
@@ -503,7 +499,6 @@ export default function Pelamar({
               </select>
             </div>
 
-            {/* Pendidikan Terakhir */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 Pendidikan Terakhir * (C4 Otomatis)
@@ -522,14 +517,12 @@ export default function Pelamar({
             </div>
           </div>
 
-          {/* Section Nilai Kriteria C1 - C5 */}
           <div className="pt-3 border-t border-slate-100">
             <h4 className="text-xs font-extrabold uppercase tracking-wider text-bps-navy mb-3">
-              Nilai Parameter Kriteria Seleksi (C1 - C5)
+              Parameter Penilaian Kriteria (C1 - C5)
             </h4>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {/* C1 Ujian */}
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1">
                   C1: Nilai Ujian (0 - 100)
@@ -542,11 +535,10 @@ export default function Pelamar({
                   required
                   value={formData.C1}
                   onChange={(e) => setFormData({ ...formData, C1: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue font-mono"
                 />
               </div>
 
-              {/* C2 Survei */}
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1">
                   C2: Riwayat Survei (Kali)
@@ -558,11 +550,10 @@ export default function Pelamar({
                   required
                   value={formData.C2}
                   onChange={(e) => setFormData({ ...formData, C2: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue font-mono"
                 />
               </div>
 
-              {/* C3 CAPI */}
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1">
                   C3: Skor Uji CAPI (0 - 100)
@@ -575,13 +566,12 @@ export default function Pelamar({
                   required
                   value={formData.C3}
                   onChange={(e) => setFormData({ ...formData, C3: parseFloat(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue font-mono"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
-              {/* C4 Skor Pendidikan */}
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1">
                   C4: Bobot Pendidikan (Skala 2 - 4)
@@ -590,12 +580,10 @@ export default function Pelamar({
                   type="number"
                   readOnly
                   value={formData.C4}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 font-bold"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 bg-slate-100 text-slate-500 font-bold font-mono"
                 />
-                <p className="text-[10px] text-slate-400 mt-0.5">Otomatis dari pilihan jenjang pendidikan</p>
               </div>
 
-              {/* C5 Jarak */}
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1">
                   C5: Jarak Domisili ke Wilayah (KM) *
@@ -607,14 +595,13 @@ export default function Pelamar({
                   required
                   value={formData.C5}
                   onChange={(e) => setFormData({ ...formData, C5: parseFloat(e.target.value) || 0.1 })}
-                  className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue"
+                  className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue font-mono"
                 />
-                <p className="text-[10px] text-amber-600 mt-0.5">Kriteria Cost: minimal 0.1 km (anti pembagian nol)</p>
+                <p className="text-[10px] text-amber-600 mt-0.5">Kriteria Cost: minimal 0.1 km</p>
               </div>
             </div>
           </div>
 
-          {/* Action Buttons Modal */}
           <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-2">
             <button
               type="button"
@@ -643,7 +630,7 @@ export default function Pelamar({
         >
           <div className="space-y-4 text-slate-600 text-sm">
             <p>
-              Apakah Anda yakin ingin menghapus data pelamar ini dari sistem? Tindakan ini tidak dapat dibatalkan.
+              Apakah Anda yakin ingin menghapus data pelamar ini? Tindakan ini tidak dapat dibatalkan.
             </p>
             <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
               <button
@@ -656,7 +643,7 @@ export default function Pelamar({
                 onClick={() => handleDeletePelamar(deleteConfirmId)}
                 className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 text-white hover:bg-rose-700 shadow-md"
               >
-                Ya, Hapus Data
+                Ya, Hapus
               </button>
             </div>
           </div>
