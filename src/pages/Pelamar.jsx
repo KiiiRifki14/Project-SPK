@@ -189,21 +189,29 @@ export default function Pelamar({
         }
 
         const imported = data.map((row, idx) => {
-          const pend = row['Pendidikan Terakhir'] || row['Pendidikan'] || row['pendidikan'] || 'S1';
-          const opt = PENDIDIKAN_OPTIONS.find(o => o.value === pend);
+          const rawGender = String(row['Jenis Kelamin'] || row['Kelamin'] || row['kelamin'] || row['gender'] || 'L').trim().toUpperCase();
+          const pend = String(row['Pendidikan Terakhir'] || row['Pendidikan'] || row['pendidikan'] || 'S1').trim();
+          const opt = PENDIDIKAN_OPTIONS.find(o => o.value.toLowerCase() === pend.toLowerCase());
+          
+          const rawC1 = row['C1 (Nilai Ujian)'] ?? row['C1'] ?? row['c1'];
+          const rawC2 = row['C2 (Riwayat Survei)'] ?? row['C2'] ?? row['c2'];
+          const rawC3 = row['C3 (Skor CAPI)'] ?? row['C3'] ?? row['c3'];
+          const rawC4 = row['C4 (Skor Pendidikan)'] ?? row['C4'] ?? row['c4'];
+          const rawC5 = row['C5 (Jarak Wilayah KM)'] ?? row['C5'] ?? row['c5'];
+
           return {
             id: `IMP-${Date.now().toString().slice(-4)}-${idx + 1}`,
-            nik: String(row['NIK'] || row['nik'] || `321300000000000${idx + 1}`),
-            nama: String(row['Nama Lengkap'] || row['Nama'] || row['nama'] || `Kandidat ${idx + 1}`),
-            jenisKelamin: row['Jenis Kelamin']?.toString().toUpperCase().startsWith('P') ? 'P' : 'L',
-            noHp: String(row['Nomor HP'] || row['No HP'] || row['noHp'] || '-'),
-            kecamatan: String(row['Kecamatan'] || row['kecamatan'] || 'Subang Kota'),
-            pendidikan: pend,
-            C1: Number(row['C1 (Nilai Ujian)'] || row['C1'] || 75),
-            C2: Number(row['C2 (Riwayat Survei)'] || row['C2'] || 1),
-            C3: Number(row['C3 (Skor CAPI)'] || row['C3'] || 80),
-            C4: opt ? opt.bobot : Number(row['C4 (Skor Pendidikan)'] || row['C4'] || 3),
-            C5: Math.max(0.1, Number(row['C5 (Jarak Wilayah KM)'] || row['C5'] || 5.0))
+            nik: String(row['NIK'] || row['nik'] || `321300000000000${idx + 1}`).trim(),
+            nama: String(row['Nama Lengkap'] || row['Nama'] || row['nama'] || `Kandidat ${idx + 1}`).trim(),
+            jenisKelamin: rawGender.startsWith('P') ? 'P' : 'L',
+            noHp: String(row['Nomor HP'] || row['No_HP'] || row['No HP'] || row['noHp'] || row['no_hp'] || '-').trim(),
+            kecamatan: String(row['Kecamatan'] || row['kecamatan'] || 'Subang Kota').trim(),
+            pendidikan: opt ? opt.value : (pend || 'SMA'),
+            C1: rawC1 !== undefined ? Number(rawC1) : 75,
+            C2: rawC2 !== undefined ? Number(rawC2) : 1,
+            C3: rawC3 !== undefined ? Number(rawC3) : 80,
+            C4: opt ? opt.bobot : (rawC4 !== undefined ? Number(rawC4) : 2),
+            C5: Math.max(0.1, rawC5 !== undefined ? Number(rawC5) : 5.0)
           };
         });
 
@@ -219,48 +227,46 @@ export default function Pelamar({
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-5 animate-fade-in pb-8">
       {/* Header Halaman & Action Toolbar */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-card">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
-          <div className="flex items-center gap-2 text-bps-navy">
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
             <Users className="w-5 h-5 text-bps-blue" />
-            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
-              Manajemen Data Calon Mitra Statistik
-            </h1>
-          </div>
-          <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Data pelamar sensus lapangan BPS Subang, input nilai seleksi C1 - C5, dan impor/ekspor spreadsheet.
+            Manajemen Data Calon Mitra Statistik
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Kelola data pelamar lapangan BPS Subang, input nilai seleksi C1 - C5, dan impor/ekspor spreadsheet.
           </p>
         </div>
 
         {/* Buttons */}
-        <div className="flex flex-wrap items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={handleOpenAddModal}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-md shadow-bps-navy/20 transition-all active:scale-95"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95"
           >
-            <UserPlus className="w-4 h-4 text-bps-blue" />
+            <UserPlus className="w-3.5 h-3.5 text-bps-blue" />
             Tambah Pelamar
           </button>
 
           <button
             onClick={onLoadSample}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-bps-navy bg-bps-blue-light hover:bg-blue-100 border border-bps-blue/20 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors shadow-2xs"
           >
             <Sparkles className="w-3.5 h-3.5 text-bps-blue" />
-            Muat Sampel Subang
+            Muat Sampel
           </button>
 
           <button
             onClick={handleExportExcel}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs"
           >
-            <Download className="w-3.5 h-3.5" />
+            <Download className="w-3.5 h-3.5 text-emerald-600" />
             Export Excel
           </button>
 
-          <label className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-colors cursor-pointer">
+          <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors cursor-pointer shadow-2xs">
             <Upload className="w-3.5 h-3.5 text-slate-500" />
             <span>Import Excel</span>
             <input
@@ -275,21 +281,21 @@ export default function Pelamar({
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-card flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Cari nama pelamar atau NIK..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-8 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-bps-blue transition-all"
+            className="w-full pl-8 pr-8 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-1 focus:ring-bps-blue transition-all"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -298,12 +304,12 @@ export default function Pelamar({
 
         {/* Dropdown Kecamatan Subang */}
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-4 h-4 text-slate-400 flex-shrink-0" />
+          <Filter className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" />
           <span className="text-xs text-slate-500 font-medium hidden md:inline">Kecamatan:</span>
           <select
             value={selectedKecamatan}
             onChange={(e) => setSelectedKecamatan(e.target.value)}
-            className="w-full sm:w-52 px-3 py-2 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-bps-blue"
+            className="w-full sm:w-48 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-1 focus:ring-bps-blue"
           >
             <option value="Semua">Semua Kecamatan ({pelamar.length})</option>
             {KECAMATAN_SUBANG.map(kec => (
@@ -314,13 +320,13 @@ export default function Pelamar({
       </div>
 
       {/* Tabel Data Pelamar */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-card overflow-hidden">
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+      <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
+        <div className="p-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
           <div className="text-xs text-slate-500 font-medium">
-            Menampilkan <strong>{filteredPelamar.length}</strong> dari total {pelamar.length} pelamar
+            Menampilkan <strong>{filteredPelamar.length}</strong> dari total {pelamar.length} calon mitra
           </div>
           {searchTerm && (
-            <span className="text-xs text-bps-blue font-semibold">
+            <span className="text-[11px] text-bps-blue font-semibold">
               Filter aktif: "{searchTerm}"
             </span>
           )}
@@ -328,25 +334,25 @@ export default function Pelamar({
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+            <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
-                <th className="py-3 px-4 w-12 text-center">No</th>
-                <th className="py-3 px-4">Nama & NIK</th>
-                <th className="py-3 px-4">Kecamatan</th>
-                <th className="py-3 px-4 text-center">Pendidikan</th>
-                <th className="py-3 px-4 text-center" title="Nilai Ujian (0-100)">C1 (Ujian)</th>
-                <th className="py-3 px-4 text-center" title="Pengalaman Survei (kali)">C2 (Survei)</th>
-                <th className="py-3 px-4 text-center" title="Uji CAPI (0-100)">C3 (CAPI)</th>
-                <th className="py-3 px-4 text-center" title="Skor Pendidikan (2-4)">C4 (Skor)</th>
-                <th className="py-3 px-4 text-center" title="Jarak ke Wilayah (KM)">C5 (Jarak)</th>
-                <th className="py-3 px-4 w-24 text-center">Aksi</th>
+                <th className="py-2.5 px-3.5 w-12 text-center">No</th>
+                <th className="py-2.5 px-3.5">Nama Lengkap & NIK</th>
+                <th className="py-2.5 px-3.5">Kecamatan</th>
+                <th className="py-2.5 px-3.5 text-center">Pendidikan</th>
+                <th className="py-2.5 px-3 text-right" title="Nilai Ujian (0-100)">C1 (Ujian)</th>
+                <th className="py-2.5 px-3 text-right" title="Pengalaman Survei (kali)">C2 (Survei)</th>
+                <th className="py-2.5 px-3 text-right" title="Uji CAPI (0-100)">C3 (CAPI)</th>
+                <th className="py-2.5 px-3 text-right" title="Skor Pendidikan (2-4)">C4 (Skor)</th>
+                <th className="py-2.5 px-3 text-right" title="Jarak ke Wilayah (KM)">C5 (Jarak)</th>
+                <th className="py-2.5 px-3.5 w-20 text-center">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredPelamar.length === 0 ? (
                 <tr>
                   <td colSpan={10} className="py-12 text-center text-slate-400 text-xs">
-                    Tidak ditemukan data pelamar yang cocok.
+                    Tidak ditemukan data pelamar yang sesuai.
                   </td>
                 </tr>
               ) : (
@@ -355,58 +361,58 @@ export default function Pelamar({
 
                   return (
                     <tr key={p.id || idx} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-3 px-4 text-center text-xs text-slate-400 font-mono">
+                      <td className="py-2.5 px-3.5 text-center text-xs text-slate-400 font-mono">
                         {idx + 1}
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-2.5 px-3.5">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-slate-100 text-bps-navy font-bold text-[10px] flex items-center justify-center flex-shrink-0 border border-slate-200">
+                          <div className="w-7 h-7 rounded-lg bg-blue-50 text-bps-navy font-bold text-[10px] flex items-center justify-center flex-shrink-0 border border-blue-100">
                             {initials}
                           </div>
                           <div>
-                            <p className="font-bold text-slate-800">{p.nama}</p>
-                            <p className="text-[11px] text-slate-400 font-mono">NIK: {p.nik}</p>
+                            <p className="font-bold text-slate-900 leading-tight">{p.nama}</p>
+                            <p className="text-[10px] text-slate-400 font-mono mt-0.5">NIK: {p.nik}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-slate-600 font-medium">
+                      <td className="py-2.5 px-3.5 text-slate-600 font-medium">
                         {p.kecamatan}
                       </td>
-                      <td className="py-3 px-4 text-center">
-                        <span className="px-2 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700">
+                      <td className="py-2.5 px-3.5 text-center">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">
                           {p.pendidikan}
                         </span>
                       </td>
-                      <td className="py-3 px-4 text-center font-bold text-slate-800 font-mono">
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-800">
                         {p.C1}
                       </td>
-                      <td className="py-3 px-4 text-center text-slate-700 font-mono">
+                      <td className="py-2.5 px-3 text-right font-mono text-slate-700">
                         {p.C2}x
                       </td>
-                      <td className="py-3 px-4 text-center font-bold text-slate-800 font-mono">
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-slate-800">
                         {p.C3}
                       </td>
-                      <td className="py-3 px-4 text-center font-bold text-bps-navy font-mono">
+                      <td className="py-2.5 px-3 text-right font-mono font-bold text-bps-navy">
                         {p.C4}
                       </td>
-                      <td className="py-3 px-4 text-center font-mono text-amber-700 font-bold">
+                      <td className="py-2.5 px-3 text-right font-mono text-amber-700 font-bold">
                         {p.C5} km
                       </td>
-                      <td className="py-3 px-4 text-center">
+                      <td className="py-2.5 px-3.5 text-center">
                         <div className="flex items-center justify-center gap-1">
                           <button
                             onClick={() => handleOpenEditModal(p)}
-                            className="p-1.5 text-slate-400 hover:text-bps-blue hover:bg-slate-100 rounded-lg transition-colors"
+                            className="p-1 text-slate-400 hover:text-bps-blue hover:bg-slate-100 rounded-md transition-colors"
                             title="Edit"
                           >
-                            <Edit className="w-4 h-4" />
+                            <Edit className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => setDeleteConfirmId(p.id)}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors"
+                            className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
                             title="Hapus"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       </td>
