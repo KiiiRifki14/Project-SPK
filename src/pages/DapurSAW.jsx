@@ -32,11 +32,11 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
           </p>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex items-center p-1 bg-white rounded-xl border border-slate-200/90 shadow-2xs w-full sm:w-auto overflow-x-auto no-scrollbar text-xs font-semibold gap-1">
+        {/* Tab Switcher: 2x2 grid on mobile, flex on desktop (Zero horizontal scroll) */}
+        <div className="grid grid-cols-2 sm:flex sm:items-center p-1 bg-white rounded-xl border border-slate-200/90 shadow-2xs w-full sm:w-auto text-xs font-semibold gap-1">
           <button
             onClick={() => setActiveMatrixTab('all')}
-            className={`flex-1 sm:flex-initial px-3.5 py-2 min-h-[40px] rounded-lg transition-all focus-ring whitespace-nowrap ${
+            className={`px-3 py-2 min-h-[40px] rounded-lg transition-all focus-ring text-center flex items-center justify-center ${
               activeMatrixTab === 'all' 
                 ? 'bg-bps-navy text-white shadow-xs font-bold' 
                 : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
@@ -46,7 +46,7 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
           </button>
           <button
             onClick={() => setActiveMatrixTab('x')}
-            className={`flex-1 sm:flex-initial px-3.5 py-2 min-h-[40px] rounded-lg transition-all focus-ring whitespace-nowrap ${
+            className={`px-3 py-2 min-h-[40px] rounded-lg transition-all focus-ring text-center flex items-center justify-center ${
               activeMatrixTab === 'x' 
                 ? 'bg-bps-navy text-white shadow-xs font-bold' 
                 : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
@@ -56,7 +56,7 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
           </button>
           <button
             onClick={() => setActiveMatrixTab('r')}
-            className={`flex-1 sm:flex-initial px-3.5 py-2 min-h-[40px] rounded-lg transition-all focus-ring whitespace-nowrap ${
+            className={`px-3 py-2 min-h-[40px] rounded-lg transition-all focus-ring text-center flex items-center justify-center ${
               activeMatrixTab === 'r' 
                 ? 'bg-bps-navy text-white shadow-xs font-bold' 
                 : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
@@ -66,7 +66,7 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
           </button>
           <button
             onClick={() => setActiveMatrixTab('wr')}
-            className={`flex-1 sm:flex-initial px-3.5 py-2 min-h-[40px] rounded-lg transition-all focus-ring whitespace-nowrap ${
+            className={`px-3 py-2 min-h-[40px] rounded-lg transition-all focus-ring text-center flex items-center justify-center ${
               activeMatrixTab === 'wr' 
                 ? 'bg-bps-navy text-white shadow-xs font-bold' 
                 : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
@@ -118,26 +118,75 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
       {/* ======================================================== */}
       {(activeMatrixTab === 'all' || activeMatrixTab === 'x') && (
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
-          <div className="p-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="p-3.5 sm:p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
             <div>
-              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-bps-navy text-white flex items-center justify-center text-xs font-bold">1</span>
-                Tabel 1: Matriks Keputusan Awal (X)
+                <span>Tabel 1: Matriks Keputusan Awal (X)</span>
               </h2>
               <p className="text-xs text-slate-500">Nilai mentah seluruh calon mitra dan baris nilai ekstrim (Max / Min)</p>
             </div>
-            <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-slate-100 text-slate-600 border border-slate-200">
+            <span className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-slate-100 text-slate-600 border border-slate-200">
               Nilai Riil Input
             </span>
           </div>
 
-          {/* Mobile Swipe Hint */}
-          <div className="md:hidden px-3.5 py-2 bg-blue-50/70 border-b border-blue-100 text-[11px] text-bps-navy flex items-center gap-1.5 font-medium">
-            <span aria-hidden="true">👉</span>
-            <span>Nama pelamar disematkan (sticky). Geser untuk melihat nilai C1 s.d. C5.</span>
+          {/* 1. DUAL-VIEW: Mobile Native Matrix X Cards (md:hidden) */}
+          <div className="md:hidden divide-y divide-slate-100">
+            {/* Top Card: Nilai Ekstrim Max & Min */}
+            <div className="p-3.5 bg-slate-50/80 border-b border-slate-200/80 space-y-2">
+              <div className="text-[11px] font-bold text-bps-navy uppercase tracking-wider">
+                Nilai Ekstrim Parameter:
+              </div>
+              <div className="grid grid-cols-5 gap-1.5 text-center">
+                {kriteria.map(c => (
+                  <div key={c.kode} className="bg-white p-1.5 rounded-lg border border-slate-200/90 shadow-2xs">
+                    <span className="block text-[10px] font-black text-slate-900">{c.kode}</span>
+                    <span className="block text-[8px] uppercase text-slate-400 font-semibold">({c.sifat})</span>
+                    <div className="mt-1 pt-1 border-t border-slate-100 space-y-0.5">
+                      <span className="block text-[9px] text-slate-500">
+                        Max: <strong className="text-bps-blue font-mono">{extremes[c.kode]?.max ?? '-'}</strong>
+                      </span>
+                      <span className="block text-[9px] text-slate-500">
+                        Min: <strong className="text-amber-700 font-mono">{extremes[c.kode]?.min ?? '-'}</strong>
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* List Calon Mitra Matriks X */}
+            {matrixX.map((row, idx) => (
+              <div key={row.id || idx} className="p-4 space-y-2.5 hover:bg-slate-50/40 transition-colors">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="w-6 h-6 rounded-md bg-slate-100 text-slate-600 font-mono font-bold text-xs flex items-center justify-center flex-shrink-0">
+                      {idx + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <h4 className="font-bold text-slate-900 text-xs truncate">{row.nama}</h4>
+                      <p className="text-[10px] text-slate-400 truncate">📍 {row.kecamatan}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-5 gap-1.5 text-center">
+                  {kriteria.map(c => (
+                    <div key={c.kode} className="bg-slate-50 p-1.5 rounded-lg border border-slate-100">
+                      <span className="block text-[9px] font-bold text-slate-400">{c.kode}</span>
+                      <span className="font-mono font-black text-slate-800 text-xs mt-0.5 block tabular-nums">
+                        {row[c.kode]}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="overflow-x-auto">
+          {/* 2. DUAL-VIEW: Desktop Full Table (hidden md:block) */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm min-w-[660px]">
               <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
                 <tr>
@@ -169,7 +218,6 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
                   </tr>
                 ))}
               </tbody>
-              {/* Baris Nilai Ekstrim: Max & Min */}
               <tfoot className="bg-slate-100/80 font-bold border-t-2 border-slate-300 text-xs">
                 <tr>
                   <td colSpan={3} className="py-2.5 px-3.5 text-right text-bps-navy uppercase tracking-wider text-[11px] sticky left-0 z-10 bg-slate-100 shadow-[2px_0_4px_rgba(0,0,0,0.06)]">
@@ -206,26 +254,54 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
       {/* ======================================================== */}
       {(activeMatrixTab === 'all' || activeMatrixTab === 'r') && (
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
-          <div className="p-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="p-3.5 sm:p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
             <div>
-              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-bps-blue text-white flex items-center justify-center text-xs font-bold">2</span>
-                Tabel 2: Matriks Ternormalisasi (R)
+                <span>Tabel 2: Matriks Ternormalisasi (R)</span>
               </h2>
               <p className="text-xs text-slate-500">Nilai skala [0, 1] hasil normalisasi Benefit & Cost (Presisi 4 desimal)</p>
             </div>
-            <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-blue-50 text-bps-navy border border-blue-200">
+            <span className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-blue-50 text-bps-navy border border-blue-200">
               Skala [0, 1]
             </span>
           </div>
 
-          {/* Mobile Swipe Hint */}
-          <div className="md:hidden px-3.5 py-2 bg-blue-50/70 border-b border-blue-100 text-[11px] text-bps-navy flex items-center gap-1.5 font-medium">
-            <span aria-hidden="true">👉</span>
-            <span>Nama pelamar disematkan (sticky). Geser untuk melihat nilai normalisasi r_ij.</span>
+          {/* 1. DUAL-VIEW: Mobile Native Matrix R Cards (md:hidden) */}
+          <div className="md:hidden divide-y divide-slate-100">
+            {matrixR.map((row, idx) => (
+              <div key={row.id || idx} className="p-4 space-y-2.5 hover:bg-slate-50/40 transition-colors">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="w-6 h-6 rounded-md bg-blue-50 text-bps-navy font-mono font-bold text-xs flex items-center justify-center flex-shrink-0 border border-blue-100">
+                      {idx + 1}
+                    </span>
+                    <h4 className="font-bold text-slate-900 text-xs truncate">{row.nama}</h4>
+                  </div>
+                  <span className="text-[10px] font-bold text-bps-blue bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100">
+                    Skala [0, 1]
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-5 gap-1.5 text-center">
+                  {kriteria.map(c => {
+                    const val = row.R?.[c.kode] ?? row[c.kode];
+                    return (
+                      <div key={c.kode} className={`p-1.5 rounded-lg border text-center ${val === 1 ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-100'}`}>
+                        <span className="block text-[8px] font-bold text-slate-400">r_{c.kode}</span>
+                        <span className={`font-mono text-[10.5px] block font-bold tabular-nums mt-0.5 ${val === 1 ? 'text-emerald-800 font-black' : 'text-slate-800'}`}>
+                          {val !== undefined ? val.toFixed(4) : '-'}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
 
-          <div className="overflow-x-auto">
+          {/* 2. DUAL-VIEW: Desktop Full Table (hidden md:block) */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm min-w-[660px]">
               <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
                 <tr>
@@ -274,26 +350,63 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
       {/* ======================================================== */}
       {(activeMatrixTab === 'all' || activeMatrixTab === 'wr') && (
         <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
-          <div className="p-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="p-3.5 sm:p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
             <div>
-              <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+              <h2 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
                 <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">3</span>
-                Tabel 3: Matriks Terbobot (W × R) & Nilai Preferensi Akhir (V)
+                <span>Tabel 3: Matriks Terbobot (W × R) & Nilai Preferensi Akhir (V)</span>
               </h2>
               <p className="text-xs text-slate-500">Perkalian r_ij dengan bobot w_j serta total penjumlahan skor akhir V</p>
             </div>
-            <span className="px-2 py-0.5 text-[10px] font-bold rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+            <span className="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200">
               Skor Akhir V_i
             </span>
           </div>
 
-          {/* Mobile Swipe Hint */}
-          <div className="md:hidden px-3.5 py-2 bg-blue-50/70 border-b border-blue-100 text-[11px] text-bps-navy flex items-center gap-1.5 font-medium">
-            <span aria-hidden="true">👉</span>
-            <span>Nama pelamar disematkan. Klik tombol audit langsung di samping nama calon!</span>
+          {/* 1. DUAL-VIEW: Mobile Native Matrix WxR Cards (md:hidden) */}
+          <div className="md:hidden divide-y divide-slate-100">
+            {matrixWR.map((row, idx) => (
+              <div key={row.id || idx} className="p-4 space-y-3 hover:bg-slate-50/40 transition-colors">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-800 font-mono font-black text-xs flex items-center justify-center flex-shrink-0 border border-emerald-200">
+                      #{idx + 1}
+                    </span>
+                    <h4 className="font-bold text-slate-900 text-xs truncate">{row.nama}</h4>
+                  </div>
+                  <div className="text-right flex-shrink-0">
+                    <span className="block text-[8px] font-bold uppercase text-bps-blue">Skor Akhir (V)</span>
+                    <span className="font-mono font-black text-sm text-bps-navy tabular-nums block">
+                      {row.scoreV.toFixed(4)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-5 gap-1.5 text-center bg-slate-50/90 p-2 rounded-xl border border-slate-100">
+                  {kriteria.map(c => (
+                    <div key={c.kode} className="bg-white p-1.5 rounded-lg border border-slate-100 shadow-2xs">
+                      <span className="block text-[8px] font-bold text-slate-400">{c.kode}</span>
+                      <span className="font-mono font-bold text-[10px] text-slate-700 block tabular-nums mt-0.5">
+                        {row.WR[c.kode] !== undefined ? row.WR[c.kode].toFixed(4) : '-'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setSelectedCandidate(row)}
+                  aria-label={`Audit detail perhitungan SAW untuk ${row.nama}`}
+                  className="w-full min-h-[44px] py-2.5 px-3 rounded-xl text-xs font-bold text-bps-navy bg-blue-50 hover:bg-blue-100 transition-colors border border-blue-200 flex items-center justify-center gap-2 active:scale-98 focus-ring"
+                >
+                  <Eye className="w-4 h-4 text-bps-blue" aria-hidden="true" />
+                  <span>Audit Rincian Perhitungan SAW</span>
+                </button>
+              </div>
+            ))}
           </div>
 
-          <div className="overflow-x-auto">
+          {/* 2. DUAL-VIEW: Desktop Full Table (hidden md:block) */}
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm min-w-[720px]">
               <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
                 <tr>
@@ -316,18 +429,7 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
                   <tr key={row.id || idx} className="hover:bg-slate-50/70 transition-colors group">
                     <td className="py-2.5 px-3.5 text-center font-mono text-slate-400 tabular-nums">{idx + 1}</td>
                     <td className="py-2.5 px-3.5 font-bold text-slate-900 sticky left-0 z-10 bg-white group-hover:bg-slate-50 shadow-[2px_0_4px_rgba(0,0,0,0.06)]">
-                      <div className="flex items-center justify-between gap-1.5">
-                        <span className="truncate">{row.nama}</span>
-                        <button
-                          onClick={() => setSelectedCandidate(row)}
-                          aria-label={`Audit SAW ${row.nama}`}
-                          className="md:hidden inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold text-bps-blue bg-blue-50 border border-blue-100 flex-shrink-0 active:scale-95"
-                          title="Audit Rumus"
-                        >
-                          <Eye className="w-3 h-3" />
-                          <span>Audit</span>
-                        </button>
-                      </div>
+                      <span className="truncate">{row.nama}</span>
                     </td>
                     {kriteria.map(c => (
                       <td key={c.kode} className="py-2.5 px-3 text-right font-mono tabular-nums text-slate-700">
@@ -385,14 +487,14 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
           </div>
 
           <div className="space-y-2">
-            <div className="p-3 bg-white rounded-lg border border-slate-200/90 font-mono text-xs text-bps-navy overflow-x-auto leading-relaxed shadow-2xs space-y-2">
+            <div className="p-3 bg-white rounded-lg border border-slate-200/90 font-mono text-xs text-bps-navy leading-relaxed shadow-2xs space-y-2 break-words">
               <div>
                 <div className="text-slate-500 text-[11px] font-sans font-medium">1. Penjabaran Nilai Bobot × Normalisasi:</div>
-                <div className="text-slate-800 text-xs">
+                <div className="text-slate-800 text-xs break-words">
                   V = {kriteria.map((c, i) => (
-                    <span key={c.kode}>
+                    <span key={c.kode} className="inline-block mr-1">
                       ({c.bobot} × {matrixR.find(r => r.id === selectedCandidate.id)?.R[c.kode]?.toFixed(4)})
-                      {i < kriteria.length - 1 ? ' + ' : ''}
+                      {i < kriteria.length - 1 ? ' +' : ''}
                     </span>
                   ))}
                 </div>
@@ -400,7 +502,7 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
 
               <div>
                 <div className="text-slate-500 text-[11px] font-sans font-medium">2. Hasil Perkalian:</div>
-                <div className="font-bold text-bps-blue text-xs">
+                <div className="font-bold text-bps-blue text-xs break-words">
                   = {kriteria.map(c => selectedCandidate.WR[c.kode]?.toFixed(4)).join(' + ')}
                 </div>
               </div>

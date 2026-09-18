@@ -179,28 +179,30 @@ export default function Dashboard({
             </span>
           </div>
 
-          {/* Swipeable on mobile, grid on desktop */}
-          <div className="flex overflow-x-auto pb-2 gap-2.5 sm:grid sm:grid-cols-5 no-scrollbar pt-1">
+          {/* Responsive grid on all screen sizes (Zero horizontal scroll on mobile) */}
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 sm:gap-2.5 pt-1">
             {steps.map((s) => (
               <div 
                 key={s.step} 
                 onClick={() => onNavigate(s.tab)}
-                className="group p-3 rounded-xl border border-slate-200/80 bg-slate-50/70 hover:bg-blue-50/50 hover:border-bps-blue/40 transition-all duration-150 cursor-pointer flex flex-col justify-between min-w-[145px] sm:min-w-0 flex-1 flex-shrink-0 active:scale-95"
+                className="group p-3 rounded-xl border border-slate-200/80 bg-slate-50/70 hover:bg-blue-50/50 hover:border-bps-blue/40 transition-all duration-150 cursor-pointer flex sm:flex-col items-center sm:items-stretch justify-between gap-2 w-full active:scale-95"
               >
-                <div>
-                  <span className="text-[11px] font-mono font-extrabold text-bps-blue group-hover:text-bps-navy transition-colors">
+                <div className="flex sm:block items-center gap-2.5 min-w-0">
+                  <span className="text-[11px] font-mono font-extrabold text-bps-blue group-hover:text-bps-navy transition-colors flex-shrink-0">
                     {s.step}
                   </span>
-                  <h3 className="text-xs font-bold text-slate-800 mt-1 group-hover:text-bps-navy transition-colors">
-                    {s.title}
-                  </h3>
-                  <p className="text-[10px] text-slate-500 mt-0.5 leading-tight">
-                    {s.desc}
-                  </p>
+                  <div className="min-w-0">
+                    <h3 className="text-xs font-bold text-slate-800 sm:mt-1 group-hover:text-bps-navy transition-colors truncate sm:whitespace-normal">
+                      {s.title}
+                    </h3>
+                    <p className="text-[10px] text-slate-500 sm:mt-0.5 leading-tight hidden sm:block">
+                      {s.desc}
+                    </p>
+                  </div>
                 </div>
-                <div className="mt-2.5 pt-2 border-t border-slate-200/60 flex items-center text-[10px] font-bold text-bps-blue group-hover:underline">
+                <div className="sm:mt-2.5 sm:pt-2 sm:border-t sm:border-slate-200/60 flex items-center text-[11px] sm:text-[10px] font-bold text-bps-blue group-hover:underline flex-shrink-0">
                   <span>Buka</span>
-                  <ChevronRight className="w-3 h-3 ml-0.5 transition-transform group-hover:translate-x-0.5" />
+                  <ChevronRight className="w-3.5 h-3.5 sm:w-3 sm:h-3 ml-0.5 transition-transform group-hover:translate-x-0.5" />
                 </div>
               </div>
             ))}

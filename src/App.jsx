@@ -85,7 +85,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row font-sans selection:bg-bps-blue selection:text-white relative">
+    <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row font-sans selection:bg-bps-blue selection:text-white relative w-full max-w-full overflow-x-hidden">
       {/* Toast Alert Pop-up */}
       <Alert alert={alert} onClose={() => setAlert(null)} />
 
@@ -104,7 +104,7 @@ export default function App() {
       />
 
       {/* Right Canvas: Navbar + Main Dynamic Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 w-full max-w-full overflow-x-hidden">
         <Navbar
           activeTab={activeTab}
           onResetData={() => setIsResetModalOpen(true)}
@@ -118,7 +118,7 @@ export default function App() {
           onToggleMobileNav={() => setIsMobileNavOpen(prev => !prev)}
         />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1500px] w-full mx-auto">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 max-w-[1500px] w-full mx-auto min-w-0">
           {activeTab === 'dashboard' && (
             <Dashboard
               pelamar={pelamar}

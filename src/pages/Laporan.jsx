@@ -138,22 +138,16 @@ export default function Laporan({
         </div>
       )}
 
-      {/* Mobile Hint for A4 Preview */}
-      <div className="md:hidden mb-3 px-3.5 py-2 bg-blue-50/70 border border-blue-100 rounded-xl text-[11px] text-bps-navy flex items-center gap-1.5 font-medium no-print">
-        <span aria-hidden="true">👉</span>
-        <span>Format cetak A4 dapat digeser ke samping untuk pratinjau penuh</span>
-      </div>
-
-      <div className="overflow-x-auto pb-4">
+      <div className="pb-4 w-full">
         {/* ========================================================== */}
         {/* LEMBAR DOKUMEN BERITA ACARA RESMI SIAP CETAK (A4 PAPER)    */}
         {/* ========================================================== */}
-        <div className="bg-white p-5 sm:p-10 md:p-12 rounded-xl border border-slate-300 shadow-sm max-w-4xl min-w-[580px] sm:min-w-0 mx-auto print-container text-slate-900 leading-relaxed font-sans">
+        <div className="bg-white p-4 sm:p-10 md:p-12 rounded-xl border border-slate-200 sm:border-slate-300 shadow-sm w-full max-w-4xl mx-auto print-container text-slate-900 leading-relaxed font-sans">
         
         {/* KOP SURAT RESMI */}
-        <div className="flex items-center gap-5 border-b-4 border-double border-slate-900 pb-4 mb-6">
-          <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center" aria-hidden="true">
-            <svg viewBox="0 0 100 100" className="w-16 h-16 fill-current text-bps-navy">
+        <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-5 border-b-2 sm:border-b-4 border-double border-slate-900 pb-4 mb-6 text-center sm:text-left">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 flex items-center justify-center" aria-hidden="true">
+            <svg viewBox="0 0 100 100" className="w-14 h-14 sm:w-16 sm:h-16 fill-current text-bps-navy">
               <polygon points="50,15 90,80 10,80" fill="#0B3C68" />
               <polygon points="50,28 78,75 22,75" fill="#00A3E0" />
               <circle cx="50" cy="58" r="12" fill="#10B981" />
@@ -161,17 +155,17 @@ export default function Laporan({
             </svg>
           </div>
 
-          <div className="text-center flex-1 pr-6">
-            <h2 className="text-lg font-bold tracking-wider uppercase text-slate-900 leading-tight">
+          <div className="flex-1 sm:pr-6">
+            <h2 className="text-base sm:text-lg font-bold tracking-wider uppercase text-slate-900 leading-tight">
               BADAN PUSAT STATISTIK
             </h2>
-            <h2 className="text-2xl font-black tracking-tight uppercase text-bps-navy">
+            <h2 className="text-xl sm:text-2xl font-black tracking-tight uppercase text-bps-navy">
               KABUPATEN SUBANG
             </h2>
-            <p className="text-xs text-slate-700 mt-1 leading-normal">
+            <p className="text-[11px] sm:text-xs text-slate-700 mt-1 leading-normal">
               Jl. Mayjen Sutoyo No. 12, Karanganyar, Kec. Subang, Kabupaten Subang, Jawa Barat 41211
             </p>
-            <p className="text-xs text-slate-600">
+            <p className="text-[10.5px] sm:text-xs text-slate-600">
               Telepon: (0260) 411032 • Pos-el: bps3213@bps.go.id • Laman: subangkab.bps.go.id
             </p>
           </div>
@@ -208,50 +202,41 @@ export default function Laporan({
           <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wide text-bps-navy">
             A. DAFTAR CALON MITRA STATISTIK YANG DINYATAKAN LOLOS SELEKSI (KUOTA UTAMA)
           </h3>
-          <table className="w-full border-collapse border border-slate-900 text-xs">
-            <thead>
-              <tr className="bg-slate-100 text-slate-900 text-center font-bold">
-                <th scope="col" className="border border-slate-900 py-2 px-2 w-10">No</th>
-                <th scope="col" className="border border-slate-900 py-2 px-3">Nama Lengkap</th>
-                <th scope="col" className="border border-slate-900 py-2 px-3 w-36">NIK</th>
-                <th scope="col" className="border border-slate-900 py-2 px-3">Kecamatan</th>
-                <th scope="col" className="border border-slate-900 py-2 px-2 w-20">Skor (V)</th>
-                <th scope="col" className="border border-slate-900 py-2 px-2 w-28">Keterangan</th>
-              </tr>
-            </thead>
-            <tbody>
-              {listLolos.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="border border-slate-900 text-center py-4 text-slate-500">
-                    Belum ada calon mitra yang lolos kuota.
-                  </td>
-                </tr>
-              ) : (
-                listLolos.map((m, idx) => (
-                  <tr key={m.id} className="text-slate-900">
-                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">{idx + 1}</td>
-                    <td className="border border-slate-900 py-1.5 px-3 font-semibold">{m.nama}</td>
-                    <td className="border border-slate-900 py-1.5 px-3 text-center font-mono tabular-nums">{m.nik}</td>
-                    <td className="border border-slate-900 py-1.5 px-3">{m.kecamatan}</td>
-                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">
-                      {m.scoreV.toFixed(4)}
-                    </td>
-                    <td className="border border-slate-900 py-1.5 px-2 text-center font-semibold text-emerald-800">
-                      Lolos Utama
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
 
-        {/* TABEL B: DAFTAR MITRA CADANGAN */}
-        {listCadangan.length > 0 && (
-          <div className="my-6 space-y-2">
-            <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wide text-amber-900">
-              B. DAFTAR CALON MITRA STATISTIK CADANGAN (PENGGANTI)
-            </h3>
+          {/* 1. Mobile Native Cards (sm:hidden print:hidden) */}
+          <div className="sm:hidden print:hidden space-y-2">
+            {listLolos.length === 0 ? (
+              <p className="p-3 bg-slate-50 text-center text-xs text-slate-500 rounded-lg border border-slate-200">
+                Belum ada calon mitra yang lolos kuota.
+              </p>
+            ) : (
+              listLolos.map((m, idx) => (
+                <div key={m.id} className="p-3 bg-slate-50/90 rounded-xl border border-slate-200 space-y-1.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-6 h-6 rounded-md bg-bps-navy text-white text-xs font-mono font-bold flex items-center justify-center flex-shrink-0">
+                        {idx + 1}
+                      </span>
+                      <h4 className="font-bold text-slate-900 text-xs truncate">{m.nama}</h4>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md flex-shrink-0">
+                      Lolos Utama
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] text-slate-600 pl-8">
+                    <span>{m.kecamatan}</span>
+                    <span className="font-mono font-bold text-bps-navy">Skor V: {m.scoreV.toFixed(4)}</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400 font-mono pl-8">
+                    NIK: {m.nik}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* 2. Desktop & Print Formal Table (hidden sm:block print:block) */}
+          <div className="hidden sm:block print:block">
             <table className="w-full border-collapse border border-slate-900 text-xs">
               <thead>
                 <tr className="bg-slate-100 text-slate-900 text-center font-bold">
@@ -264,22 +249,97 @@ export default function Laporan({
                 </tr>
               </thead>
               <tbody>
-                {listCadangan.map((m, idx) => (
-                  <tr key={m.id} className="text-slate-900">
-                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">{idx + 1}</td>
-                    <td className="border border-slate-900 py-1.5 px-3 font-semibold">{m.nama}</td>
-                    <td className="border border-slate-900 py-1.5 px-3 text-center font-mono tabular-nums">{m.nik}</td>
-                    <td className="border border-slate-900 py-1.5 px-3">{m.kecamatan}</td>
-                    <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">
-                      {m.scoreV.toFixed(4)}
-                    </td>
-                    <td className="border border-slate-900 py-1.5 px-2 text-center font-semibold text-amber-800">
-                      Cadangan #{idx + 1}
+                {listLolos.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="border border-slate-900 text-center py-4 text-slate-500">
+                      Belum ada calon mitra yang lolos kuota.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  listLolos.map((m, idx) => (
+                    <tr key={m.id} className="text-slate-900">
+                      <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">{idx + 1}</td>
+                      <td className="border border-slate-900 py-1.5 px-3 font-semibold">{m.nama}</td>
+                      <td className="border border-slate-900 py-1.5 px-3 text-center font-mono tabular-nums">{m.nik}</td>
+                      <td className="border border-slate-900 py-1.5 px-3">{m.kecamatan}</td>
+                      <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">
+                        {m.scoreV.toFixed(4)}
+                      </td>
+                      <td className="border border-slate-900 py-1.5 px-2 text-center font-semibold text-emerald-800">
+                        Lolos Utama
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* TABEL B: DAFTAR MITRA CADANGAN */}
+        {listCadangan.length > 0 && (
+          <div className="my-6 space-y-2">
+            <h3 className="text-xs sm:text-sm font-bold uppercase tracking-wide text-amber-900">
+              B. DAFTAR CALON MITRA STATISTIK CADANGAN (PENGGANTI)
+            </h3>
+
+            {/* 1. Mobile Native Cards (sm:hidden print:hidden) */}
+            <div className="sm:hidden print:hidden space-y-2">
+              {listCadangan.map((m, idx) => (
+                <div key={m.id} className="p-3 bg-amber-50/50 rounded-xl border border-amber-200 space-y-1.5">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="w-6 h-6 rounded-md bg-amber-600 text-white text-xs font-mono font-bold flex items-center justify-center flex-shrink-0">
+                        {idx + 1}
+                      </span>
+                      <h4 className="font-bold text-slate-900 text-xs truncate">{m.nama}</h4>
+                    </div>
+                    <span className="text-[10px] font-bold text-amber-800 bg-amber-100/70 border border-amber-200 px-2 py-0.5 rounded-md flex-shrink-0">
+                      Cadangan #{idx + 1}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] text-slate-600 pl-8">
+                    <span>{m.kecamatan}</span>
+                    <span className="font-mono font-bold text-bps-navy">Skor V: {m.scoreV.toFixed(4)}</span>
+                  </div>
+                  <div className="text-[10px] text-slate-400 font-mono pl-8">
+                    NIK: {m.nik}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* 2. Desktop & Print Formal Table (hidden sm:block print:block) */}
+            <div className="hidden sm:block print:block">
+              <table className="w-full border-collapse border border-slate-900 text-xs">
+                <thead>
+                  <tr className="bg-slate-100 text-slate-900 text-center font-bold">
+                    <th scope="col" className="border border-slate-900 py-2 px-2 w-10">No</th>
+                    <th scope="col" className="border border-slate-900 py-2 px-3">Nama Lengkap</th>
+                    <th scope="col" className="border border-slate-900 py-2 px-3 w-36">NIK</th>
+                    <th scope="col" className="border border-slate-900 py-2 px-3">Kecamatan</th>
+                    <th scope="col" className="border border-slate-900 py-2 px-2 w-20">Skor (V)</th>
+                    <th scope="col" className="border border-slate-900 py-2 px-2 w-28">Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {listCadangan.map((m, idx) => (
+                    <tr key={m.id} className="text-slate-900">
+                      <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">{idx + 1}</td>
+                      <td className="border border-slate-900 py-1.5 px-3 font-semibold">{m.nama}</td>
+                      <td className="border border-slate-900 py-1.5 px-3 text-center font-mono tabular-nums">{m.nik}</td>
+                      <td className="border border-slate-900 py-1.5 px-3">{m.kecamatan}</td>
+                      <td className="border border-slate-900 py-1.5 px-2 text-center font-bold font-mono tabular-nums">
+                        {m.scoreV.toFixed(4)}
+                      </td>
+                      <td className="border border-slate-900 py-1.5 px-2 text-center font-semibold text-amber-800">
+                        Cadangan #{idx + 1}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
@@ -292,8 +352,8 @@ export default function Laporan({
         </div>
 
         {/* KOLOM TANDA TANGAN */}
-        <div className="mt-12 pt-6 grid grid-cols-2 gap-8 text-xs sm:text-sm text-center">
-          <div className="space-y-16">
+        <div className="mt-8 sm:mt-12 pt-6 grid grid-cols-1 sm:grid-cols-2 print:grid-cols-2 gap-8 text-xs sm:text-sm text-center">
+          <div className="space-y-12 sm:space-y-16">
             <div>
               <p className="text-slate-600">Panitia Seleksi Rekrutmen,</p>
               <p className="font-bold text-slate-800">BPS Kabupaten Subang</p>
@@ -306,7 +366,7 @@ export default function Laporan({
             </div>
           </div>
 
-          <div className="space-y-16">
+          <div className="space-y-12 sm:space-y-16">
             <div>
               <p className="text-slate-600">Subang, {new Date(pengaturan?.tanggalSK || Date.now()).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
               <p className="font-bold text-slate-800">Kepala BPS Kabupaten Subang,</p>
