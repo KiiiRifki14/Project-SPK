@@ -5,14 +5,23 @@ import {
   Users, 
   Calculator, 
   Award, 
-  Printer,
-  ChevronRight,
-  ShieldCheck,
-  Sparkles,
-  BookOpen
+  Printer, 
+  ChevronRight, 
+  ShieldCheck, 
+  Sparkles, 
+  BookOpen,
+  X 
 } from 'lucide-react';
 
-export default function Sidebar({ activeTab, setActiveTab, pelamarCount, kriteriaCount, bobotValid }) {
+export default function Sidebar({ 
+  activeTab, 
+  setActiveTab, 
+  pelamarCount, 
+  kriteriaCount, 
+  bobotValid,
+  isMobileNavOpen,
+  onCloseMobile
+}) {
   const navigationGroups = [
     {
       group: 'MENU UTAMA',
@@ -72,32 +81,46 @@ export default function Sidebar({ activeTab, setActiveTab, pelamarCount, kriteri
     }
   ];
 
-  return (
-    <aside className="w-full md:w-64 lg:w-72 bg-white border-r border-slate-200/90 flex-shrink-0 flex flex-col justify-between no-print shadow-[1px_0_4px_rgba(0,0,0,0.02)] min-h-screen">
+  // Render Inner Content of Sidebar (Shared between Desktop & Mobile)
+  const renderSidebarContent = (isMobile = false) => (
+    <div className="flex flex-col justify-between h-full min-h-full">
       <div>
         {/* Brand Header */}
-        <div className="h-20 px-5 border-b border-slate-200/90 flex items-center gap-3.5 bg-white">
-          <div className="w-11 h-11 rounded-xl bg-bps-navy flex items-center justify-center text-white shadow-md shadow-bps-navy/20 flex-shrink-0 border border-bps-navy-light/40">
-            {/* Logo BPS Geometry */}
-            <svg viewBox="0 0 40 40" className="w-7 h-7">
-              <polygon points="20,6 35,31 5,31" fill="#00A3E0" />
-              <circle cx="20" cy="22.5" r="5.5" fill="#10B981" />
-              <polygon points="12,31 28,31 20,36" fill="#F59E0B" />
-            </svg>
-          </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="font-black text-sm text-bps-navy tracking-tight truncate">
-                BPS KAB. SUBANG
-              </span>
-              <span className="px-1.5 py-0.5 text-[10px] font-black rounded-md bg-bps-blue/15 text-bps-blue uppercase tracking-wider">
-                SAW
-              </span>
+        <div className="h-20 px-5 border-b border-slate-200/90 flex items-center justify-between bg-white">
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="w-11 h-11 rounded-xl bg-bps-navy flex items-center justify-center text-white shadow-md shadow-bps-navy/20 flex-shrink-0 border border-bps-navy-light/40">
+              {/* Logo BPS Geometry */}
+              <svg viewBox="0 0 40 40" className="w-7 h-7">
+                <polygon points="20,6 35,31 5,31" fill="#00A3E0" />
+                <circle cx="20" cy="22.5" r="5.5" fill="#10B981" />
+                <polygon points="12,31 28,31 20,36" fill="#F59E0B" />
+              </svg>
             </div>
-            <p className="text-xs text-slate-500 font-medium truncate mt-0.5">
-              Seleksi Mitra Statistik
-            </p>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-black text-sm text-bps-navy tracking-tight truncate">
+                  BPS KAB. SUBANG
+                </span>
+                <span className="px-1.5 py-0.5 text-[10px] font-black rounded-md bg-bps-blue/15 text-bps-blue uppercase tracking-wider">
+                  SAW
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 font-medium truncate mt-0.5">
+                Seleksi Mitra Statistik
+              </p>
+            </div>
           </div>
+
+          {/* Close button for mobile drawer */}
+          {isMobile && (
+            <button
+              onClick={onCloseMobile}
+              className="p-2 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors focus-ring"
+              aria-label="Tutup menu navigasi"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Navigation Sections */}
@@ -114,9 +137,12 @@ export default function Sidebar({ activeTab, setActiveTab, pelamarCount, kriteri
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveTab(item.id)}
+                    onClick={() => {
+                      setActiveTab(item.id);
+                      if (isMobile && onCloseMobile) onCloseMobile();
+                    }}
                     aria-current={isActive ? 'page' : undefined}
-                    className={`w-full group flex items-center justify-between px-3 py-2 rounded-xl transition-all duration-150 text-left focus-ring ${
+                    className={`w-full group flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-150 text-left focus-ring ${
                       isActive
                         ? 'bg-bps-navy text-white shadow-sm font-semibold'
                         : 'text-slate-600 hover:bg-slate-50 hover:text-bps-navy font-medium'
@@ -181,6 +207,32 @@ export default function Sidebar({ activeTab, setActiveTab, pelamarCount, kriteri
           <span className="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-bold text-[9px]">100% Teruji</span>
         </div>
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* 1. Desktop Docked Sidebar (Hidden on Mobile) */}
+      <aside className="hidden md:flex md:w-64 lg:w-72 bg-white border-r border-slate-200/90 flex-shrink-0 flex-col justify-between no-print shadow-[1px_0_4px_rgba(0,0,0,0.02)] min-h-screen sticky top-0 h-screen overflow-y-auto">
+        {renderSidebarContent(false)}
+      </aside>
+
+      {/* 2. Mobile Off-Canvas Drawer with Backdrop (Visible only on Mobile when open) */}
+      {isMobileNavOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex" role="dialog" aria-modal="true">
+          {/* Dark Backdrop Overlay */}
+          <div 
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-fade-in"
+            onClick={onCloseMobile}
+            aria-hidden="true"
+          />
+
+          {/* Drawer Canvas */}
+          <aside className="relative flex-1 flex flex-col max-w-[280px] w-full bg-white shadow-2xl z-10 animate-slide-in overflow-y-auto">
+            {renderSidebarContent(true)}
+          </aside>
+        </div>
+      )}
+    </>
   );
 }

@@ -19,6 +19,7 @@ export default function App() {
   const [activeRole, setActiveRole] = useState('panitia');
   const [alert, setAlert] = useState(null);
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   // State Data Tersimpan di LocalStorage
   const [kriteria, setKriteria] = useState(() => {
@@ -84,17 +85,22 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row font-sans selection:bg-bps-blue selection:text-white">
+    <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row font-sans selection:bg-bps-blue selection:text-white relative">
       {/* Toast Alert Pop-up */}
       <Alert alert={alert} onClose={() => setAlert(null)} />
 
-      {/* Docked Left Sidebar */}
+      {/* Sidebar (Desktop Docked + Mobile Off-Canvas Drawer) */}
       <Sidebar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={(tab) => {
+          setActiveTab(tab);
+          setIsMobileNavOpen(false);
+        }}
         pelamarCount={pelamar.length}
         kriteriaCount={kriteria.length}
         bobotValid={bobotValidation.isValid}
+        isMobileNavOpen={isMobileNavOpen}
+        onCloseMobile={() => setIsMobileNavOpen(false)}
       />
 
       {/* Right Canvas: Navbar + Main Dynamic Content */}
@@ -109,6 +115,7 @@ export default function App() {
             showAlert(`Mode beralih ke peran: ${role === 'superadmin' ? 'Superadmin BPS' : 'Panitia Seleksi'}`, 'info');
           }}
           summary={sawResult?.summary}
+          onToggleMobileNav={() => setIsMobileNavOpen(prev => !prev)}
         />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1500px] w-full mx-auto">

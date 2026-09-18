@@ -68,26 +68,26 @@ export default function Dashboard({
             Implementasi komputasi analitis berbasis metode <strong>Simple Additive Weighting (SAW)</strong> untuk menetapkan mitra survei lapangan secara objektif, transparan, dan terukur.
           </p>
           
-          <div className="pt-2 flex flex-wrap items-center gap-2.5">
+          <div className="pt-2 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5">
             <button
               onClick={() => onNavigate('dapur')}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-white text-bps-navy hover:bg-blue-50 shadow-sm transition-all transform hover:-translate-y-0.5 active:translate-y-0 focus-ring"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white text-bps-navy hover:bg-blue-50 shadow-sm transition-all transform hover:-translate-y-0.5 active:translate-y-0 focus-ring w-full sm:w-auto"
             >
-              <Calculator className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
+              <Calculator className="w-4 h-4 text-bps-blue" aria-hidden="true" />
               Buka Dapur Hitung SAW
             </button>
             <button
               onClick={() => onNavigate('ranking')}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-white/10 text-white hover:bg-white/20 border border-white/20 backdrop-blur-md transition-all active:scale-95 focus-ring"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-white/10 text-white hover:bg-white/20 border border-white/20 backdrop-blur-md transition-all active:scale-95 focus-ring w-full sm:w-auto"
             >
-              <Award className="w-3.5 h-3.5 text-amber-300" aria-hidden="true" />
+              <Award className="w-4 h-4 text-amber-300" aria-hidden="true" />
               Lihat Ranking ({sawResult?.ranking?.length || 0})
             </button>
             <button
               onClick={() => onNavigate('laporan')}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold text-blue-100 hover:text-white transition-colors focus-ring"
+              className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold text-blue-100 hover:text-white transition-colors focus-ring w-full sm:w-auto"
             >
-              <Printer className="w-3.5 h-3.5 text-slate-300" aria-hidden="true" />
+              <Printer className="w-4 h-4 text-slate-300" aria-hidden="true" />
               Pratinjau Berita Acara →
             </button>
           </div>
@@ -274,7 +274,7 @@ export default function Dashboard({
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs sm:text-sm">
+          <table className="w-full text-left text-xs sm:text-sm min-w-[650px]">
             <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
                 <th className="py-2.5 px-4 w-16 text-center">Rank</th>

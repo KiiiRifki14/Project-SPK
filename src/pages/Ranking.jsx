@@ -76,20 +76,20 @@ export default function Ranking({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
           <button
             onClick={handleExportExcel}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs"
           >
             <Download className="w-3.5 h-3.5 text-emerald-600" />
             Export Excel
           </button>
           <button
             onClick={() => onNavigate('laporan')}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95"
           >
             <Printer className="w-3.5 h-3.5 text-bps-blue" />
-            Cetak SK Berita Acara
+            Cetak SK BPS
           </button>
         </div>
       </div>
@@ -217,8 +217,14 @@ export default function Ranking({
           </span>
         </div>
 
+        {/* Mobile Swipe Hint */}
+        <div className="md:hidden px-3.5 py-2 bg-blue-50/70 border-b border-blue-100 text-[11px] text-bps-navy flex items-center gap-1.5 font-medium">
+          <span aria-hidden="true">👉</span>
+          <span>Geser tabel ke samping untuk melihat detail nilai & status lolos/cadangan</span>
+        </div>
+
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs sm:text-sm">
+          <table className="w-full text-left text-xs sm:text-sm min-w-[700px]">
             <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
                 <th scope="col" className="py-2.5 px-3.5 w-16 text-center">Rank</th>

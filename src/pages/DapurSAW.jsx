@@ -131,8 +131,14 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
             </span>
           </div>
 
+          {/* Mobile Swipe Hint */}
+          <div className="md:hidden px-3.5 py-2 bg-blue-50/70 border-b border-blue-100 text-[11px] text-bps-navy flex items-center gap-1.5 font-medium">
+            <span aria-hidden="true">👉</span>
+            <span>Geser tabel ke samping untuk melihat nilai C1 s.d. C5 & baris Max/Min</span>
+          </div>
+
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm">
+            <table className="w-full text-left text-xs sm:text-sm min-w-[660px]">
               <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
                 <tr>
                   <th scope="col" className="py-2.5 px-3.5 w-12 text-center">No</th>
@@ -211,8 +217,14 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
             </span>
           </div>
 
+          {/* Mobile Swipe Hint */}
+          <div className="md:hidden px-3.5 py-2 bg-blue-50/70 border-b border-blue-100 text-[11px] text-bps-navy flex items-center gap-1.5 font-medium">
+            <span aria-hidden="true">👉</span>
+            <span>Geser tabel ke samping untuk melihat nilai normalisasi r_ij (C1 s.d. C5)</span>
+          </div>
+
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm">
+            <table className="w-full text-left text-xs sm:text-sm min-w-[660px]">
               <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
                 <tr>
                   <th scope="col" className="py-2.5 px-3.5 w-12 text-center">No</th>
@@ -271,8 +283,14 @@ export default function DapurSAW({ sawResult, kriteria = [] }) {
             </span>
           </div>
 
+          {/* Mobile Swipe Hint */}
+          <div className="md:hidden px-3.5 py-2 bg-blue-50/70 border-b border-blue-100 text-[11px] text-bps-navy flex items-center gap-1.5 font-medium">
+            <span aria-hidden="true">👉</span>
+            <span>Geser tabel ke samping untuk melihat perkalian bobot W×R & skor preferensi V</span>
+          </div>
+
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm">
+            <table className="w-full text-left text-xs sm:text-sm min-w-[720px]">
               <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
                 <tr>
                   <th scope="col" className="py-2.5 px-3.5 w-12 text-center">No</th>

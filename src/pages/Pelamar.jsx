@@ -241,10 +241,10 @@ export default function Pelamar({
         </div>
 
         {/* Buttons */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full sm:w-auto">
           <button
             onClick={handleOpenAddModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95 focus-ring"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95 focus-ring col-span-2 sm:col-span-1"
           >
             <UserPlus className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
             Tambah Pelamar
@@ -252,7 +252,7 @@ export default function Pelamar({
 
           <button
             onClick={onLoadSample}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors shadow-2xs focus-ring"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors shadow-2xs focus-ring"
           >
             <Sparkles className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
             Muat Sampel
@@ -260,13 +260,13 @@ export default function Pelamar({
 
           <button
             onClick={handleExportExcel}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs focus-ring"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs focus-ring"
           >
             <Download className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
             Export Excel
           </button>
 
-          <label className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors cursor-pointer shadow-2xs focus-within:ring-2 focus-within:ring-bps-blue">
+          <label className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors cursor-pointer shadow-2xs focus-within:ring-2 focus-within:ring-bps-blue col-span-2 sm:col-span-1">
             <Upload className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
             <span>Import Excel</span>
             <input
@@ -338,8 +338,14 @@ export default function Pelamar({
           )}
         </div>
 
+        {/* Mobile Swipe Hint */}
+        <div className="md:hidden px-3.5 py-2 bg-blue-50/70 border-b border-blue-100 text-[11px] text-bps-navy flex items-center gap-1.5 font-medium">
+          <span aria-hidden="true">👉</span>
+          <span>Geser tabel ke samping untuk melihat detail nilai C1 - C5 & aksi</span>
+        </div>
+
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs sm:text-sm">
+          <table className="w-full text-left text-xs sm:text-sm min-w-[780px]">
             <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
                 <th scope="col" className="py-2.5 px-3.5 w-12 text-center">No</th>

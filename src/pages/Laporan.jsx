@@ -51,11 +51,11 @@ export default function Laporan({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
           <button
             onClick={() => setIsEditingSettings(!isEditingSettings)}
             aria-expanded={isEditingSettings}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-white hover:bg-slate-50 transition-colors border border-slate-200/90 shadow-2xs focus-ring"
+            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 transition-colors border border-slate-200/90 shadow-2xs focus-ring"
           >
             <Settings className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
             {isEditingSettings ? 'Tutup Pengaturan' : 'Ubah No. SK & Kop'}
@@ -63,10 +63,10 @@ export default function Laporan({
           <button
             onClick={handlePrint}
             aria-label="Cetak atau simpan dokumen berita acara ke format PDF"
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95 focus-ring"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95 focus-ring"
           >
             <Printer className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
-            Cetak / Simpan PDF
+            Cetak / PDF
           </button>
         </div>
       </div>
@@ -138,10 +138,17 @@ export default function Laporan({
         </div>
       )}
 
-      {/* ========================================================== */}
-      {/* LEMBAR DOKUMEN BERITA ACARA RESMI SIAP CETAK (A4 PAPER)    */}
-      {/* ========================================================== */}
-      <div className="bg-white p-8 sm:p-12 rounded-xl border border-slate-300 shadow-sm max-w-4xl mx-auto print-container text-slate-900 leading-relaxed font-sans">
+      {/* Mobile Hint for A4 Preview */}
+      <div className="md:hidden mb-3 px-3.5 py-2 bg-blue-50/70 border border-blue-100 rounded-xl text-[11px] text-bps-navy flex items-center gap-1.5 font-medium no-print">
+        <span aria-hidden="true">👉</span>
+        <span>Format cetak A4 dapat digeser ke samping untuk pratinjau penuh</span>
+      </div>
+
+      <div className="overflow-x-auto pb-4">
+        {/* ========================================================== */}
+        {/* LEMBAR DOKUMEN BERITA ACARA RESMI SIAP CETAK (A4 PAPER)    */}
+        {/* ========================================================== */}
+        <div className="bg-white p-5 sm:p-10 md:p-12 rounded-xl border border-slate-300 shadow-sm max-w-4xl min-w-[580px] sm:min-w-0 mx-auto print-container text-slate-900 leading-relaxed font-sans">
         
         {/* KOP SURAT RESMI */}
         <div className="flex items-center gap-5 border-b-4 border-double border-slate-900 pb-4 mb-6">
@@ -314,8 +321,8 @@ export default function Laporan({
             </div>
           </div>
         </div>
-
       </div>
     </div>
-  );
+  </div>
+);
 }

@@ -7,7 +7,8 @@ import {
   ChevronDown,
   ShieldCheck,
   Award,
-  Layers
+  Layers,
+  Menu
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -16,7 +17,8 @@ export default function Navbar({
   onLoadSample, 
   activeRole, 
   onChangeRole, 
-  summary 
+  summary,
+  onToggleMobileNav 
 }) {
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
 
@@ -34,21 +36,32 @@ export default function Navbar({
 
   return (
     <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-sm no-print">
-      <div className="px-5 sm:px-7 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Breadcrumb & Current Title */}
-          <div className="flex flex-col justify-center">
-            <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-1">
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 hover:text-bps-navy hover:bg-slate-200/70 transition-colors">
-                <Building2 className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
-                BPS Kab. Subang
-              </span>
-              <span className="text-slate-300">/</span>
-              <span className="text-bps-blue font-bold tracking-wide">{currentInfo.category}</span>
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            {/* Hamburger Button for Mobile */}
+            <button
+              onClick={onToggleMobileNav}
+              className="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 border border-slate-200/90 focus-ring flex-shrink-0 active:scale-95"
+              aria-label="Buka menu navigasi utama"
+            >
+              <Menu className="w-5 h-5 text-bps-navy" />
+            </button>
+
+            <div className="flex flex-col justify-center min-w-0">
+              <div className="hidden sm:flex items-center gap-2 text-xs font-semibold text-slate-400 mb-0.5">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 hover:text-bps-navy hover:bg-slate-200/70 transition-colors">
+                  <Building2 className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
+                  BPS Kab. Subang
+                </span>
+                <span className="text-slate-300">/</span>
+                <span className="text-bps-blue font-bold tracking-wide">{currentInfo.category}</span>
+              </div>
+              <h1 className="text-base sm:text-2xl font-black text-bps-navy tracking-tight leading-snug truncate">
+                {currentInfo.title}
+              </h1>
             </div>
-            <h1 className="text-xl sm:text-2xl font-black text-bps-navy tracking-tight leading-snug">
-              {currentInfo.title}
-            </h1>
           </div>
 
           {/* Quick Action Buttons & Profile */}

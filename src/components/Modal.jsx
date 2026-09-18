@@ -23,30 +23,30 @@ export default function Modal({ isOpen, onClose, title, children, maxWidth = 'ma
       />
 
       {/* Modal Dialog */}
-      <div className="flex min-h-full items-center justify-center p-4 text-center">
+      <div className="flex min-h-full items-center justify-center p-2.5 sm:p-4 text-center">
         <div 
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-dialog-title"
-          className={`w-full ${maxWidth} transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-2xl transition-all border border-slate-100 animate-in fade-in zoom-in-95 duration-200`}
+          className={`w-full ${maxWidth} transform overflow-hidden rounded-2xl bg-white text-left align-middle shadow-2xl transition-all border border-slate-100 animate-in fade-in zoom-in-95 duration-200 my-auto`}
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4 bg-slate-50/80">
-            <h3 id="modal-dialog-title" className="text-base sm:text-lg font-bold text-bps-navy">
+          <div className="flex items-center justify-between border-b border-slate-100 px-4 sm:px-6 py-3.5 sm:py-4 bg-slate-50/80">
+            <h3 id="modal-dialog-title" className="text-sm sm:text-lg font-bold text-bps-navy truncate pr-2">
               {title}
             </h3>
             <button
               onClick={onClose}
               aria-label="Tutup jendela dialog"
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-bps-blue"
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-200 hover:text-slate-600 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-bps-blue flex-shrink-0"
             >
               <X className="w-5 h-5" aria-hidden="true" />
             </button>
           </div>
 
           {/* Body */}
-          <div className="px-6 py-5 max-h-[80vh] overflow-y-auto">
+          <div className="px-4 sm:px-6 py-4 sm:py-5 max-h-[82vh] overflow-y-auto">
             {children}
           </div>
         </div>
