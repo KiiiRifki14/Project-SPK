@@ -40,10 +40,10 @@ export default function Navbar({
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Breadcrumb & Current Title */}
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            {/* Hamburger Button for Mobile */}
+            {/* Hamburger Button for Mobile (44x44px touch target) */}
             <button
               onClick={onToggleMobileNav}
-              className="md:hidden p-2 rounded-xl text-slate-700 hover:bg-slate-100 border border-slate-200/90 focus-ring flex-shrink-0 active:scale-95"
+              className="md:hidden w-11 h-11 flex items-center justify-center rounded-xl text-slate-700 hover:bg-slate-100 border border-slate-200/90 focus-ring flex-shrink-0 active:scale-95"
               aria-label="Buka menu navigasi utama"
             >
               <Menu className="w-5 h-5 text-bps-navy" />

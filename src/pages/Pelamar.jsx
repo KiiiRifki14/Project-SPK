@@ -244,30 +244,30 @@ export default function Pelamar({
         <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2 w-full sm:w-auto">
           <button
             onClick={handleOpenAddModal}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95 focus-ring col-span-2 sm:col-span-1"
+            className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 min-h-[44px] text-xs font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95 focus-ring col-span-2 sm:col-span-1"
           >
-            <UserPlus className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
-            Tambah Pelamar
+            <UserPlus className="w-4 h-4 text-bps-blue" aria-hidden="true" />
+            <span>Tambah Pelamar</span>
           </button>
 
           <button
             onClick={onLoadSample}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors shadow-2xs focus-ring"
+            className="inline-flex items-center justify-center gap-2 px-3 py-2.5 min-h-[44px] text-xs font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors shadow-2xs focus-ring"
           >
-            <Sparkles className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
-            Muat Sampel
+            <Sparkles className="w-4 h-4 text-bps-blue" aria-hidden="true" />
+            <span>Muat Sampel</span>
           </button>
 
           <button
             onClick={handleExportExcel}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs focus-ring"
+            className="inline-flex items-center justify-center gap-2 px-3 py-2.5 min-h-[44px] text-xs font-semibold rounded-xl text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 transition-colors shadow-2xs focus-ring"
           >
-            <Download className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
-            Export Excel
+            <Download className="w-4 h-4 text-emerald-600" aria-hidden="true" />
+            <span>Export Excel</span>
           </button>
 
-          <label className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors cursor-pointer shadow-2xs focus-within:ring-2 focus-within:ring-bps-blue col-span-2 sm:col-span-1">
-            <Upload className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
+          <label className="inline-flex items-center justify-center gap-2 px-3 py-2.5 min-h-[44px] text-xs font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 border border-slate-200/90 transition-colors cursor-pointer shadow-2xs focus-within:ring-2 focus-within:ring-bps-blue col-span-2 sm:col-span-1">
+            <Upload className="w-4 h-4 text-slate-500" aria-hidden="true" />
             <span>Import Excel</span>
             <input
               type="file"
@@ -281,10 +281,10 @@ export default function Pelamar({
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="bg-white p-3 rounded-xl border border-slate-200/90 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-white p-3.5 sm:p-4 rounded-xl border border-slate-200/90 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative w-full sm:w-80">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" aria-hidden="true" />
           <input
             type="text"
             aria-label="Cari nama pelamar atau NIK"
@@ -293,29 +293,29 @@ export default function Pelamar({
             placeholder="Cari nama pelamar atau NIK…"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-8 pr-8 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-1 focus:ring-bps-blue transition-all"
+            className="w-full pl-10 pr-9 h-11 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-bps-blue/40 transition-all"
           />
           {searchTerm && (
             <button
               onClick={() => setSearchTerm('')}
               aria-label="Hapus teks pencarian"
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus-ring rounded"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus-ring rounded p-1"
             >
-              <X className="w-3.5 h-3.5" aria-hidden="true" />
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
         </div>
 
         {/* Dropdown Kecamatan Subang */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Filter className="w-3.5 h-3.5 text-slate-400 flex-shrink-0" aria-hidden="true" />
+        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+          <Filter className="w-4 h-4 text-slate-400 flex-shrink-0" aria-hidden="true" />
           <label htmlFor="filter-kecamatan" className="text-xs text-slate-500 font-medium hidden md:inline">Kecamatan:</label>
           <select
             id="filter-kecamatan"
             aria-label="Pilih filter kecamatan"
             value={selectedKecamatan}
             onChange={(e) => setSelectedKecamatan(e.target.value)}
-            className="w-full sm:w-48 px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-1 focus:ring-bps-blue focus-ring"
+            className="w-full sm:w-52 h-11 px-3 text-xs sm:text-sm rounded-xl border border-slate-200 bg-slate-50/70 focus:bg-white focus:outline-none focus:ring-2 focus:ring-bps-blue/40 focus-ring font-medium"
           >
             <option value="Semua">Semua Kecamatan ({pelamar.length})</option>
             {KECAMATAN_SUBANG.map(kec => (
@@ -325,26 +325,123 @@ export default function Pelamar({
         </div>
       </div>
 
-      {/* Tabel Data Pelamar */}
+      {/* Tabel & Kartu Data Pelamar */}
       <div className="bg-white rounded-xl border border-slate-200/90 shadow-xs overflow-hidden">
-        <div className="p-3.5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-          <div className="text-xs text-slate-500 font-medium">
-            Menampilkan <strong className="tabular-nums">{filteredPelamar.length}</strong> dari total <span className="tabular-nums">{pelamar.length}</span> calon mitra
+        <div className="p-3.5 sm:p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <div className="text-xs sm:text-sm text-slate-600 font-medium">
+            Menampilkan <strong className="tabular-nums text-slate-900 font-bold">{filteredPelamar.length}</strong> dari total <span className="tabular-nums font-semibold">{pelamar.length}</span> calon mitra
           </div>
           {searchTerm && (
-            <span className="text-[11px] text-bps-blue font-semibold">
-              Filter aktif: “{searchTerm}”
+            <span className="text-[11px] sm:text-xs text-bps-blue font-bold px-2 py-0.5 rounded-full bg-blue-50 border border-blue-100">
+              Filter: “{searchTerm}”
             </span>
           )}
         </div>
 
-        {/* Mobile Swipe Hint */}
-        <div className="md:hidden px-3.5 py-2 bg-blue-50/70 border-b border-blue-100 text-[11px] text-bps-navy flex items-center gap-1.5 font-medium">
-          <span aria-hidden="true">👉</span>
-          <span>Geser tabel ke samping untuk melihat detail nilai C1 - C5 & aksi</span>
+        {/* 1. DUAL-VIEW: Mobile Native Card List (md:hidden) */}
+        <div className="md:hidden divide-y divide-slate-100">
+          {filteredPelamar.length === 0 ? (
+            <div className="py-12 px-4 text-center text-slate-400 text-xs">
+              Tidak ditemukan data calon mitra yang sesuai.
+            </div>
+          ) : (
+            filteredPelamar.map((p, idx) => {
+              const initials = p.nama?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'PL';
+
+              return (
+                <div key={p.id || idx} className="p-4 space-y-3 hover:bg-slate-50/40 transition-colors">
+                  {/* Candidate Header */}
+                  <div className="flex items-start justify-between gap-2.5">
+                    <div className="flex items-start gap-3 min-w-0">
+                      <div className="w-10 h-10 rounded-xl bg-blue-50 text-bps-navy font-black text-xs flex items-center justify-center flex-shrink-0 border border-blue-100 shadow-2xs mt-0.5" aria-hidden="true">
+                        {initials}
+                      </div>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <h3 className="font-bold text-slate-900 text-sm leading-snug">{p.nama}</h3>
+                          <span className={`px-1.5 py-0.5 text-[9px] font-bold rounded-md ${
+                            p.jenisKelamin === 'P' 
+                              ? 'bg-pink-50 text-pink-700 border border-pink-200' 
+                              : 'bg-blue-50 text-blue-700 border border-blue-200'
+                          }`}>
+                            {p.jenisKelamin === 'P' ? 'Perempuan' : 'Laki-laki'}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-400 font-mono tabular-nums mt-0.5">NIK: {p.nik}</p>
+                      </div>
+                    </div>
+
+                    <span className="text-[10px] font-mono font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full flex-shrink-0">
+                      #{idx + 1}
+                    </span>
+                  </div>
+
+                  {/* Secondary info pills: Kecamatan & Pendidikan */}
+                  <div className="flex items-center gap-2 flex-wrap text-xs">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-medium text-[11px]">
+                      📍 {p.kecamatan}
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 text-bps-navy font-bold text-[11px] border border-blue-100">
+                      🎓 {p.pendidikan} (Skor {p.C4})
+                    </span>
+                    {p.noHp && p.noHp !== '-' && (
+                      <span className="text-[11px] text-slate-500 font-mono">
+                        📞 {p.noHp}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* 5-Metrics Grid C1 - C5 */}
+                  <div className="grid grid-cols-3 gap-2 bg-slate-50/90 p-2.5 rounded-xl border border-slate-100 text-center">
+                    <div className="bg-white p-2 rounded-lg border border-slate-100 shadow-2xs">
+                      <span className="block text-[9px] font-bold uppercase tracking-wider text-slate-400">C1: Ujian</span>
+                      <span className="font-mono font-black text-slate-800 text-xs mt-0.5 block tabular-nums">{p.C1}</span>
+                    </div>
+                    <div className="bg-white p-2 rounded-lg border border-slate-100 shadow-2xs">
+                      <span className="block text-[9px] font-bold uppercase tracking-wider text-slate-400">C2: Survei</span>
+                      <span className="font-mono font-black text-slate-700 text-xs mt-0.5 block tabular-nums">{p.C2}x</span>
+                    </div>
+                    <div className="bg-white p-2 rounded-lg border border-slate-100 shadow-2xs">
+                      <span className="block text-[9px] font-bold uppercase tracking-wider text-slate-400">C3: CAPI</span>
+                      <span className="font-mono font-black text-slate-800 text-xs mt-0.5 block tabular-nums">{p.C3}</span>
+                    </div>
+                    <div className="bg-white p-2 rounded-lg border border-slate-100 shadow-2xs">
+                      <span className="block text-[9px] font-bold uppercase tracking-wider text-slate-400">C4: Skor</span>
+                      <span className="font-mono font-black text-bps-navy text-xs mt-0.5 block tabular-nums">{p.C4}</span>
+                    </div>
+                    <div className="bg-white p-2 rounded-lg border border-amber-100 shadow-2xs col-span-2">
+                      <span className="block text-[9px] font-bold uppercase tracking-wider text-amber-700">C5: Jarak Wilayah (Cost)</span>
+                      <span className="font-mono font-black text-amber-800 text-xs mt-0.5 block tabular-nums">{p.C5} km</span>
+                    </div>
+                  </div>
+
+                  {/* Mobile Action Buttons (Minimum 44px Touch Targets) */}
+                  <div className="flex items-center gap-2 pt-1">
+                    <button
+                      onClick={() => handleOpenEditModal(p)}
+                      aria-label={`Edit data calon mitra ${p.nama}`}
+                      className="flex-1 min-h-[44px] px-3 rounded-xl bg-slate-100 hover:bg-blue-50 text-bps-navy font-bold text-xs flex items-center justify-center gap-2 border border-slate-200 transition-colors active:scale-98 focus-ring"
+                    >
+                      <Edit className="w-4 h-4 text-bps-blue" aria-hidden="true" />
+                      <span>Edit Pelamar</span>
+                    </button>
+                    <button
+                      onClick={() => setDeleteConfirmId(p.id)}
+                      aria-label={`Hapus data calon mitra ${p.nama}`}
+                      className="min-h-[44px] px-4 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center gap-1.5 border border-rose-200 transition-colors active:scale-98 focus-ring"
+                    >
+                      <Trash2 className="w-4 h-4 text-rose-600" aria-hidden="true" />
+                      <span>Hapus</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
 
-        <div className="overflow-x-auto">
+        {/* 2. DUAL-VIEW: Desktop Full Data Table (hidden md:block) */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm min-w-[780px]">
             <thead className="bg-slate-50/80 text-slate-500 text-[11px] font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
@@ -415,7 +512,7 @@ export default function Pelamar({
                           <button
                             onClick={() => handleOpenEditModal(p)}
                             aria-label={`Edit data ${p.nama}`}
-                            className="p-1 text-slate-400 hover:text-bps-blue hover:bg-slate-100 rounded-md transition-colors focus-ring"
+                            className="p-1.5 text-slate-400 hover:text-bps-blue hover:bg-slate-100 rounded-md transition-colors focus-ring"
                             title="Edit"
                           >
                             <Edit className="w-3.5 h-3.5" aria-hidden="true" />
@@ -423,7 +520,7 @@ export default function Pelamar({
                           <button
                             onClick={() => setDeleteConfirmId(p.id)}
                             aria-label={`Hapus data ${p.nama}`}
-                            className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors focus-ring"
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors focus-ring"
                             title="Hapus"
                           >
                             <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />

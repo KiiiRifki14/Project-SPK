@@ -55,81 +55,81 @@ export default function Laporan({
           <button
             onClick={() => setIsEditingSettings(!isEditingSettings)}
             aria-expanded={isEditingSettings}
-            className="inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 transition-colors border border-slate-200/90 shadow-2xs focus-ring"
+            className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 min-h-[44px] text-xs font-semibold rounded-xl text-slate-700 bg-white hover:bg-slate-50 transition-colors border border-slate-200/90 shadow-2xs focus-ring"
           >
-            <Settings className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
-            {isEditingSettings ? 'Tutup Pengaturan' : 'Ubah No. SK & Kop'}
+            <Settings className="w-4 h-4 text-slate-500" aria-hidden="true" />
+            <span>{isEditingSettings ? 'Tutup Pengaturan' : 'Ubah No. SK & Kop'}</span>
           </button>
           <button
             onClick={handlePrint}
             aria-label="Cetak atau simpan dokumen berita acara ke format PDF"
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95 focus-ring"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 min-h-[44px] text-xs font-bold rounded-xl bg-bps-navy text-white hover:bg-bps-navy-light shadow-xs transition-all active:scale-95 focus-ring"
           >
-            <Printer className="w-3.5 h-3.5 text-bps-blue" aria-hidden="true" />
-            Cetak / PDF
+            <Printer className="w-4 h-4 text-bps-blue" aria-hidden="true" />
+            <span>Cetak / PDF</span>
           </button>
         </div>
       </div>
 
       {/* Form Edit Pengaturan Surat (No-Print) */}
       {isEditingSettings && (
-        <div className="bg-white p-4 sm:p-5 rounded-xl border border-bps-blue/30 shadow-xs space-y-3 no-print animate-fade-in">
-          <h3 className="text-xs font-bold text-bps-navy flex items-center gap-2">
+        <div className="bg-white p-4 sm:p-5 rounded-xl border border-bps-blue/30 shadow-xs space-y-3.5 no-print animate-fade-in">
+          <h3 className="text-xs sm:text-sm font-bold text-bps-navy flex items-center gap-2">
             <Settings className="w-4 h-4 text-bps-blue" aria-hidden="true" />
-            Pengaturan Informasi Lembar Surat Resmi
+            <span>Pengaturan Informasi Lembar Surat Resmi</span>
           </h3>
-          <form onSubmit={handleSaveSettings} className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <form onSubmit={handleSaveSettings} className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
             <div>
-              <label htmlFor="sk-nomor" className="block text-[11px] font-semibold text-slate-600 mb-1">Nomor SK Berita Acara</label>
+              <label htmlFor="sk-nomor" className="block text-xs font-bold text-slate-700 mb-1">Nomor SK Berita Acara</label>
               <input
                 id="sk-nomor"
                 type="text"
                 value={formSettings.nomorSK || ''}
                 onChange={(e) => setFormSettings({ ...formSettings, nomorSK: e.target.value })}
-                className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-bps-blue focus-ring"
+                className="w-full px-3 h-11 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue/40 focus-ring font-medium"
               />
             </div>
             <div>
-              <label htmlFor="sk-periode" className="block text-[11px] font-semibold text-slate-600 mb-1">Nama Periode Sensus / Survei</label>
+              <label htmlFor="sk-periode" className="block text-xs font-bold text-slate-700 mb-1">Nama Periode Sensus / Survei</label>
               <input
                 id="sk-periode"
                 type="text"
                 value={formSettings.namaPeriode || ''}
                 onChange={(e) => setFormSettings({ ...formSettings, namaPeriode: e.target.value })}
-                className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-bps-blue focus-ring"
+                className="w-full px-3 h-11 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue/40 focus-ring font-medium"
               />
             </div>
             <div>
-              <label htmlFor="sk-kepala" className="block text-[11px] font-semibold text-slate-600 mb-1">Nama Kepala BPS Kabupaten Subang</label>
+              <label htmlFor="sk-kepala" className="block text-xs font-bold text-slate-700 mb-1">Nama Kepala BPS Kabupaten Subang</label>
               <input
                 id="sk-kepala"
                 type="text"
                 value={formSettings.namaKepala || ''}
                 onChange={(e) => setFormSettings({ ...formSettings, namaKepala: e.target.value })}
-                className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-bps-blue focus-ring"
+                className="w-full px-3 h-11 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue/40 focus-ring font-medium"
               />
             </div>
             <div>
-              <label htmlFor="sk-nip" className="block text-[11px] font-semibold text-slate-600 mb-1">NIP Kepala BPS</label>
+              <label htmlFor="sk-nip" className="block text-xs font-bold text-slate-700 mb-1">NIP Kepala BPS</label>
               <input
                 id="sk-nip"
                 type="text"
                 value={formSettings.nipKepala || ''}
                 onChange={(e) => setFormSettings({ ...formSettings, nipKepala: e.target.value })}
-                className="w-full px-2.5 py-1.5 text-xs rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-bps-blue focus-ring font-mono tabular-nums"
+                className="w-full px-3 h-11 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue/40 focus-ring font-mono tabular-nums font-medium"
               />
             </div>
-            <div className="sm:col-span-2 flex justify-end gap-2 pt-2 border-t border-slate-100">
+            <div className="sm:col-span-2 flex justify-end gap-2.5 pt-2 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => setIsEditingSettings(false)}
-                className="px-3 py-1.5 text-xs font-semibold text-slate-500 hover:bg-slate-100 rounded-lg focus-ring"
+                className="px-4 py-2.5 min-h-[44px] text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl focus-ring"
               >
                 Batal
               </button>
               <button
                 type="submit"
-                className="px-4 py-1.5 text-xs font-bold bg-bps-navy text-white hover:bg-bps-navy-light rounded-lg shadow-xs focus-ring"
+                className="px-5 py-2.5 min-h-[44px] text-xs font-bold bg-bps-navy text-white hover:bg-bps-navy-light rounded-xl shadow-xs focus-ring"
               >
                 Simpan Perubahan
               </button>
