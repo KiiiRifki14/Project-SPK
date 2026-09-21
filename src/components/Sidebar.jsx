@@ -213,7 +213,7 @@ export default function Sidebar({
   return (
     <>
       {/* 1. Desktop Docked Sidebar (Hidden on Mobile) */}
-      <aside className="hidden md:flex md:w-64 lg:w-72 bg-white border-r border-slate-200/90 flex-shrink-0 flex-col justify-between no-print shadow-[1px_0_4px_rgba(0,0,0,0.02)] min-h-screen sticky top-0 h-screen overflow-y-auto">
+      <aside className="hidden md:flex md:w-64 lg:w-72 bg-white border-r border-slate-200/90 flex-col justify-between no-print shadow-[1px_0_4px_rgba(0,0,0,0.02)] fixed inset-y-0 left-0 z-30 h-screen overflow-y-auto">
         {renderSidebarContent(false)}
       </aside>
 

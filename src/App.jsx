@@ -85,7 +85,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row font-sans selection:bg-bps-blue selection:text-white relative w-full max-w-full overflow-x-hidden">
+    <div className="min-h-screen bg-slate-100 flex flex-col md:flex-row font-sans selection:bg-bps-blue selection:text-white relative w-full max-w-full overflow-x-clip">
       {/* Toast Alert Pop-up */}
       <Alert alert={alert} onClose={() => setAlert(null)} />
 
@@ -104,7 +104,7 @@ export default function App() {
       />
 
       {/* Right Canvas: Navbar + Main Dynamic Content */}
-      <div className="flex-1 flex flex-col min-w-0 w-full max-w-full overflow-x-hidden">
+      <div className="flex-1 flex flex-col min-w-0 w-full max-w-full md:pl-64 lg:pl-72 print:pl-0 overflow-x-clip">
         <Navbar
           activeTab={activeTab}
           onResetData={() => setIsResetModalOpen(true)}
