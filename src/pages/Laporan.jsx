@@ -76,7 +76,7 @@ export default function Laporan({
         <div className="bg-white p-4 sm:p-5 rounded-xl border border-bps-blue/30 shadow-xs space-y-3.5 no-print animate-fade-in">
           <h3 className="text-xs sm:text-sm font-bold text-bps-navy flex items-center gap-2">
             <Settings className="w-4 h-4 text-bps-blue" aria-hidden="true" />
-            <span>Pengaturan Informasi Lembar Surat Resmi</span>
+            <span>Pengaturan Informasi Lembar Surat Resmi Berita Acara</span>
           </h3>
           <form onSubmit={handleSaveSettings} className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
             <div>
@@ -100,12 +100,32 @@ export default function Laporan({
               />
             </div>
             <div>
+              <label htmlFor="sk-tanggal" className="block text-xs font-bold text-slate-700 mb-1">Tanggal Surat SK</label>
+              <input
+                id="sk-tanggal"
+                type="date"
+                value={formSettings.tanggalSK || ''}
+                onChange={(e) => setFormSettings({ ...formSettings, tanggalSK: e.target.value })}
+                className="w-full px-3 h-11 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue/40 focus-ring font-medium"
+              />
+            </div>
+            <div>
+              <label htmlFor="sk-panitia" className="block text-xs font-bold text-slate-700 mb-1">Nama Ketua Panitia Seleksi</label>
+              <input
+                id="sk-panitia"
+                type="text"
+                value={formSettings.ketuaPanitiaNama || ''}
+                onChange={(e) => setFormSettings({ ...formSettings, ketuaPanitiaNama: e.target.value })}
+                className="w-full px-3 h-11 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue/40 focus-ring font-medium"
+              />
+            </div>
+            <div>
               <label htmlFor="sk-kepala" className="block text-xs font-bold text-slate-700 mb-1">Nama Kepala BPS Kabupaten Subang</label>
               <input
                 id="sk-kepala"
                 type="text"
-                value={formSettings.namaKepala || ''}
-                onChange={(e) => setFormSettings({ ...formSettings, namaKepala: e.target.value })}
+                value={formSettings.kepalaBpsNama || formSettings.namaKepala || ''}
+                onChange={(e) => setFormSettings({ ...formSettings, kepalaBpsNama: e.target.value, namaKepala: e.target.value })}
                 className="w-full px-3 h-11 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue/40 focus-ring font-medium"
               />
             </div>
@@ -114,8 +134,8 @@ export default function Laporan({
               <input
                 id="sk-nip"
                 type="text"
-                value={formSettings.nipKepala || ''}
-                onChange={(e) => setFormSettings({ ...formSettings, nipKepala: e.target.value })}
+                value={formSettings.kepalaBpsNip || formSettings.nipKepala || ''}
+                onChange={(e) => setFormSettings({ ...formSettings, kepalaBpsNip: e.target.value, nipKepala: e.target.value })}
                 className="w-full px-3 h-11 text-xs sm:text-sm rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-bps-blue/40 focus-ring font-mono tabular-nums font-medium"
               />
             </div>

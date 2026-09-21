@@ -37,10 +37,10 @@ export default function Dashboard({
 
   // Alur Langkah Sistem
   const steps = [
-    { step: '01', title: 'Data Pelamar', desc: 'Input nilai ujian, riwayat survei, & CAPI', tab: 'pelamar' },
-    { step: '02', title: 'Atur Bobot', desc: 'Validasi bobot C1 - C5 = 100%', tab: 'kriteria' },
-    { step: '03', title: 'Dapur Hitung', desc: 'Normalisasi Benefit & Cost SAW', tab: 'dapur' },
-    { step: '04', title: 'Ranking', desc: 'Leaderboard & seleksi kuota', tab: 'ranking' },
+    { step: '01', title: 'Data Pelamar', desc: 'Input nilai ujian, survei, & CAPI mentah', tab: 'pelamar' },
+    { step: '02', title: 'Kriteria & Bobot', desc: 'Tingkat kepentingan & konversi subkriteria', tab: 'kriteria' },
+    { step: '03', title: 'Dapur Hitung', desc: '4 Tabel: Mentah, Crisp, R, & W×R', tab: 'dapur' },
+    { step: '04', title: 'Ranking', desc: 'Leaderboard & seleksi kuota SAW', tab: 'ranking' },
     { step: '05', title: 'Cetak Berita Acara', desc: 'Format resmi berkop BPS Subang', tab: 'laporan' }
   ];
 

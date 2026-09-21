@@ -43,7 +43,7 @@ export default function Pelamar({
     C1: 80,
     C2: 2,
     C3: 85,
-    C4: 4,
+    C4: 5,
     C5: 3.5
   };
   const [formData, setFormData] = useState(initialFormState);
@@ -76,7 +76,7 @@ export default function Pelamar({
       C1: p.C1 ?? 80,
       C2: p.C2 ?? 2,
       C3: p.C3 ?? 85,
-      C4: p.C4 ?? 4,
+      C4: p.C4 ?? (p.pendidikan === 'S1' ? 5 : p.pendidikan === 'D3' ? 3 : 2),
       C5: p.C5 ?? 3.5
     });
     setIsModalOpen(true);
@@ -691,7 +691,7 @@ export default function Pelamar({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
               <div>
                 <label className="block text-xs font-semibold text-slate-600 mb-1">
-                  C4: Bobot Pendidikan (Skala 2 - 4)
+                  C4: Bobot Pendidikan (Skala 2 - 5)
                 </label>
                 <input
                   type="number"

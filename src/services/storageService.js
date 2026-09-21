@@ -31,11 +31,14 @@ function setStorageItem(key, value) {
 }
 
 export const storageService = {
-  // Inisialisasi awal jika localStorage masih kosong
+  // Inisialisasi awal jika localStorage masih kosong atau perlu migrasi
   initStorage() {
     if (!isBrowser) return;
     if (!window.localStorage.getItem(STORAGE_KEYS.KRITERIA)) {
       this.saveKriteria(INITIAL_KRITERIA);
+    } else {
+      // Verifikasi apakah kriteria tersimpan sudah memiliki tingkatKepentingan
+      this.getKriteria();
     }
     if (!window.localStorage.getItem(STORAGE_KEYS.PELAMAR)) {
       this.savePelamar(INITIAL_PELAMAR);
@@ -47,7 +50,16 @@ export const storageService = {
 
   // Kriteria
   getKriteria() {
-    return getStorageItem(STORAGE_KEYS.KRITERIA, INITIAL_KRITERIA);
+    const raw = getStorageItem(STORAGE_KEYS.KRITERIA, INITIAL_KRITERIA);
+    if (!Array.isArray(raw)) return INITIAL_KRITERIA;
+    
+    // Migrasi data kriteria lama jika belum memiliki tingkatKepentingan (PRD v2.0)
+    const hasTingkatKepentingan = raw.every(c => c.tingkatKepentingan !== undefined);
+    if (!hasTingkatKepentingan) {
+      this.saveKriteria(INITIAL_KRITERIA);
+      return INITIAL_KRITERIA;
+    }
+    return raw;
   },
   saveKriteria(kriteria) {
     setStorageItem(STORAGE_KEYS.KRITERIA, kriteria);

@@ -1,11 +1,112 @@
 /**
  * Layanan Kalkulasi Metode Simple Additive Weighting (SAW)
- * Mengacu pada Bab 5 Buku Ajar SPK Politeknik Negeri Subang
- * Khusus Seleksi Mitra Statistik BPS Kabupaten Subang
+ * Mengacu pada PRD Final v2.0.0 (Academic Revision)
+ * Khusus Seleksi Calon Mitra Statistik BPS Kabupaten Subang
  */
 
 /**
- * Validasi total bobot kriteria agar persis 1.0 (100%)
+ * Konversi data mentah pelamar ke nilai tegas (crisp) berskala 1 - 5
+ * Mengacu pada PRD Final Bagian 2.2
+ * 
+ * @param {Object} applicant - Objek pelamar berisi nilai mentah C1 - C5 & pendidikan
+ * @returns {Object} Nilai crisp { C1, C2, C3, C4, C5 }
+ */
+export function convertRawToCrisp(applicant = {}) {
+  // 1. C1: Nilai Ujian Kompetensi (Benefit)
+  // >= 85 -> 5; 75 - 84.9 -> 4; 65 - 74.9 -> 3; 55 - 64.9 -> 2; < 55 -> 1
+  const rawC1 = Number(applicant.C1 ?? applicant.c1_mentah ?? 0);
+  let c1 = 1;
+  if (rawC1 >= 85) c1 = 5;
+  else if (rawC1 >= 75) c1 = 4;
+  else if (rawC1 >= 65) c1 = 3;
+  else if (rawC1 >= 55) c1 = 2;
+  else c1 = 1;
+
+  // 2. C2: Pengalaman Lapangan (Benefit)
+  // >= 5 kali -> 5; 3 - 4 kali -> 4; 1 - 2 kali -> 3; 0 kali -> 1
+  const rawC2 = Number(applicant.C2 ?? applicant.c2_mentah ?? 0);
+  let c2 = 1;
+  if (rawC2 >= 5) c2 = 5;
+  else if (rawC2 >= 3) c2 = 4;
+  else if (rawC2 >= 1) c2 = 3;
+  else c2 = 1;
+
+  // 3. C3: Kemahiran CAPI (Benefit)
+  // >= 85 -> 5; 75 - 84.9 -> 4; 65 - 74.9 -> 3; < 65 -> 2
+  const rawC3 = Number(applicant.C3 ?? applicant.c3_mentah ?? 0);
+  let c3 = 2;
+  if (rawC3 >= 85) c3 = 5;
+  else if (rawC3 >= 75) c3 = 4;
+  else if (rawC3 >= 65) c3 = 3;
+  else c3 = 2;
+
+  // 4. C4: Jenjang Pendidikan Terakhir (Benefit)
+  // S1 / D4 -> 5; D3 -> 3; SMA / SMK -> 2
+  const rawEdu = applicant.pendidikan || applicant.c4_mentah || applicant.C4;
+  let c4 = 2;
+  if (typeof rawEdu === 'string') {
+    const norm = rawEdu.toUpperCase().replace(/\s+/g, '');
+    if (norm.includes('S1') || norm.includes('D4') || norm.includes('SARJANA')) {
+      c4 = 5;
+    } else if (norm.includes('D3') || norm.includes('DIPLOMA')) {
+      c4 = 3;
+    } else {
+      c4 = 2;
+    }
+  } else {
+    const num = Number(rawEdu);
+    if (num >= 4) c4 = 5; // Support legacy value 4 (S1) -> 5
+    else if (num === 3) c4 = 3;
+    else c4 = 2;
+  }
+
+  // 5. C5: Jarak Domisili ke Wilayah (Cost)
+  // <= 3 km -> 1; 3.1 - 7 km -> 2; 7.1 - 15 km -> 3; 15.1 - 25 km -> 4; > 25 km -> 5
+  // Nilai crisp kecil (1) = jarak dekat = terbaik
+  const rawC5 = Number(applicant.C5 ?? applicant.c5_mentah ?? 0);
+  let c5 = 1;
+  if (rawC5 <= 3) c5 = 1;
+  else if (rawC5 <= 7) c5 = 2;
+  else if (rawC5 <= 15) c5 = 3;
+  else if (rawC5 <= 25) c5 = 4;
+  else c5 = 5;
+
+  return { C1: c1, C2: c2, C3: c3, C4: c4, C5: c5 };
+}
+
+/**
+ * Hitung bobot kriteria w_j otomatis dari Tingkat Kepentingan (skala 1-5)
+ * Formula PRD 2.1: w_j = Tingkat Kepentingan_j / Sum(Tingkat Kepentingan)
+ * 
+ * @param {Array} criteria - Array of kriteria [{kode, tingkatKepentingan, ...}]
+ * @returns {Array} Kriteria dengan bobot desimal 4 angka di belakang koma
+ */
+export function calculateWeightsFromPriority(criteria = []) {
+  if (!criteria || criteria.length === 0) return [];
+  const totalKepentingan = criteria.reduce((sum, c) => sum + Number(c.tingkatKepentingan || 1), 0);
+  
+  if (totalKepentingan === 0) {
+    const equalWeight = Number((1 / criteria.length).toFixed(4));
+    return criteria.map(c => ({
+      ...c,
+      bobot: equalWeight,
+      perhitungan: `1 / ${criteria.length}`
+    }));
+  }
+
+  return criteria.map(c => {
+    const k = Number(c.tingkatKepentingan || 1);
+    const w = Number((k / totalKepentingan).toFixed(4));
+    return {
+      ...c,
+      bobot: w,
+      perhitungan: `${k} / ${totalKepentingan}`
+    };
+  });
+}
+
+/**
+ * Validasi total bobot kriteria agar mendekati 1.0 (toleransi pembulatan 4 desimal)
  * @param {Array} criteria - Array of kriteria [{kode, bobot, ...}]
  * @returns {Object} { isValid, total, diff }
  */
@@ -17,7 +118,7 @@ export function validateBobot(criteria = []) {
   const roundedTotal = Number(total.toFixed(4));
   const diff = Number(Math.abs(1.0 - roundedTotal).toFixed(4));
   return {
-    isValid: diff < 0.001,
+    isValid: diff < 0.005, // Toleransi pembulatan 4 desimal (misal 0.2778 + 0.2222 + 0.2222 + 0.1667 + 0.1111 = 1.0000)
     total: roundedTotal,
     diff
   };
@@ -43,9 +144,14 @@ export function autoNormalizeBobot(criteria = []) {
 
 /**
  * Fungsi Inti Perhitungan SAW (Simple Additive Weighting)
- * Menghasilkan 3 Matriks: X (Keputusan), R (Normalisasi), W*R (Terbobot), serta Hasil Ranking
+ * Sesuai PRD Final Bagian 2 & 3:
+ * Menghasilkan 4 Dataset Pembuktian Ilmiah:
+ * 1. matrixRaw: Data mentah asli pendaftar
+ * 2. matrixX: Matriks Keputusan Awal (Data Crisp 1 - 5)
+ * 3. matrixR: Matriks Ternormalisasi (4 desimal) beserta Nilai Ekstrim Min/Max
+ * 4. matrixWR: Matriks Terbobot (W * R) serta Nilai Preferensi Vi
  * 
- * @param {Array} applicants - Daftar pelamar
+ * @param {Array} applicants - Daftar pelamar (data mentah)
  * @param {Array} criteria - Daftar kriteria C1 - C5 beserta bobot dan sifatnya
  * @param {Object} options - { kuotaLolos, kuotaCadangan }
  * @returns {Object} Hasil komputasi transparan
@@ -56,6 +162,7 @@ export function calculateSAW(applicants = [], criteria = [], options = {}) {
 
   if (!applicants || applicants.length === 0 || !criteria || criteria.length === 0) {
     return {
+      matrixRaw: [],
       matrixX: [],
       extremes: {},
       matrixR: [],
@@ -74,66 +181,76 @@ export function calculateSAW(applicants = [], criteria = [], options = {}) {
     };
   }
 
-  // 1. Ambil nilai mentah & cari Nilai Ekstrim: Max untuk Benefit, Min untuk Cost
+  // 1. DATA MENTAH (Tabel 1 Dapur SAW)
+  const matrixRaw = applicants.map((app, idx) => ({
+    id: app.id || idx + 1,
+    nik: app.nik || '-',
+    nama: app.nama || app.namaLengkap || `Pelamar ${idx + 1}`,
+    kecamatan: app.kecamatan || '-',
+    pendidikan: app.pendidikan || '-',
+    C1: Number(app.C1 ?? app.c1_mentah ?? 0),
+    C2: Number(app.C2 ?? app.c2_mentah ?? 0),
+    C3: Number(app.C3 ?? app.c3_mentah ?? 0),
+    C4: app.pendidikan || app.c4_mentah || 'SMA/SMK',
+    C5: Number(app.C5 ?? app.c5_mentah ?? 0)
+  }));
+
+  // 2. MATRIKS KEPUTUSAN AWAL X (DATA CRISP 1-5 - PRD 2.2 & 2.3)
+  const matrixX = applicants.map((app, idx) => {
+    const crisp = convertRawToCrisp(app);
+    return {
+      id: app.id || idx + 1,
+      nik: app.nik || '-',
+      nama: app.nama || app.namaLengkap || `Pelamar ${idx + 1}`,
+      kecamatan: app.kecamatan || '-',
+      pendidikan: app.pendidikan || '-',
+      raw: app,
+      crisp,
+      C1: crisp.C1,
+      C2: crisp.C2,
+      C3: crisp.C3,
+      C4: crisp.C4,
+      C5: crisp.C5
+    };
+  });
+
+  // 3. CARI NILAI EKSTRIM DARI MATRIKS CRISP (X)
+  // Kriteria Benefit (C1, C2, C3, C4): Max(x_j)
+  // Kriteria Cost (C5): Min(x_j)
   const extremes = {};
   criteria.forEach(c => {
     const kode = c.kode;
     const isCost = c.sifat?.toLowerCase() === 'cost';
 
-    const values = applicants.map(a => {
-      let val = Number(a[kode]);
-      if (isNaN(val)) val = 0;
-      // Proteksi khusus untuk kriteria Cost (C5 Jarak): tidak boleh <= 0 untuk cegah pembagian dengan nol
-      if (isCost && val <= 0) {
-        val = 0.1; // Minimal 0.1 km (100 meter dari kantor BPS)
-      }
-      return val;
-    });
+    const crispValues = matrixX.map(row => Number(row[kode] || 1));
 
     extremes[kode] = {
-      max: values.length > 0 ? Math.max(...values) : 0,
-      min: values.length > 0 ? Math.min(...values) : 0.1
+      max: crispValues.length > 0 ? Math.max(...crispValues) : 5,
+      min: crispValues.length > 0 ? Math.min(...crispValues) : 1
     };
   });
 
-  // 2. Matriks Keputusan Awal (X)
-  const matrixX = applicants.map((app, idx) => {
-    const row = {
-      id: app.id || idx + 1,
-      nik: app.nik || '-',
-      nama: app.nama || app.namaLengkap || `Pelamar ${idx + 1}`,
-      kecamatan: app.kecamatan || '-',
-      pendidikan: app.pendidikan || '-'
-    };
-    criteria.forEach(c => {
-      let val = Number(app[c.kode]);
-      if (isNaN(val)) val = 0;
-      if (c.sifat?.toLowerCase() === 'cost' && val <= 0) val = 0.1;
-      row[c.kode] = val;
-    });
-    return row;
-  });
-
-  // 3. Matriks Ternormalisasi (R)
-  const matrixR = applicants.map((app, idx) => {
+  // 4. MATRIKS TERNORMALISASI R (PRD 2.3)
+  // Benefit: r_ij = x_ij / Max(x_j)
+  // Cost:    r_ij = Min(x_j) / x_ij
+  const matrixR = matrixX.map((rowX, idx) => {
     const normalized = {};
     const normalizedRaw = {};
 
     criteria.forEach(c => {
       const kode = c.kode;
       const isBenefit = c.sifat?.toLowerCase() === 'benefit';
-      let val = Number(app[kode]);
-      if (isNaN(val)) val = 0;
+      const xVal = Number(rowX[kode] || 1);
 
       let r = 0;
       if (isBenefit) {
-        const maxVal = extremes[kode].max;
-        r = maxVal === 0 ? 0 : val / maxVal;
+        const maxVal = extremes[kode]?.max || 5;
+        r = maxVal === 0 ? 0 : xVal / maxVal;
       } else {
-        // Cost (Jarak)
-        if (val <= 0) val = 0.1;
-        const minVal = extremes[kode].min;
-        r = val === 0 ? 0 : minVal / val;
+        // Cost (C5 Jarak Domisili)
+        // Nilai crisp kecil (1) = terdekat = minVal
+        const minVal = extremes[kode]?.min || 1;
+        r = xVal === 0 ? 0 : minVal / xVal;
       }
 
       normalizedRaw[kode] = r;
@@ -141,18 +258,21 @@ export function calculateSAW(applicants = [], criteria = [], options = {}) {
     });
 
     return {
-      id: app.id || idx + 1,
-      nik: app.nik || '-',
-      nama: app.nama || app.namaLengkap || `Pelamar ${idx + 1}`,
-      kecamatan: app.kecamatan || '-',
+      id: rowX.id,
+      nik: rowX.nik,
+      nama: rowX.nama,
+      kecamatan: rowX.kecamatan,
+      raw: rowX.raw,
+      crisp: rowX.crisp,
       R: normalized,
       R_raw: normalizedRaw
     };
   });
 
-  // 4. Matriks Terbobot (W * R) & Perhitungan Nilai Preferensi Vi
+  // 5. MATRIKS TERBOBOT (W * R) & PERHITUNGAN NILAI PREFERENSI V_i (PRD 2.4)
+  // V_i = Sum(w_j * r_ij)
   const matrixWR = matrixR.map((rowR, idx) => {
-    const app = applicants[idx];
+    const rawApp = rowR.raw;
     const weightedRow = {};
     let totalVi = 0;
 
@@ -172,42 +292,48 @@ export function calculateSAW(applicants = [], criteria = [], options = {}) {
       nik: rowR.nik,
       nama: rowR.nama,
       kecamatan: rowR.kecamatan,
-      rawApplicant: app,
+      rawApplicant: rawApp,
+      crisp: rowR.crisp,
+      R: rowR.R,
       WR: weightedRow,
       scoreV: finalScore,
       scoreV_raw: totalVi
     };
   });
 
-  // 5. Perangkingan (Sorting Descending) dengan Aturan Tie-Breaker
+  // 6. PERANGKINGAN & TIE-BREAKER (PRD 2.4)
+  // Urutan tie-breaker:
+  // 1. Nilai preferensi V_i (Descending)
+  // 2. Nilai mentah Ujian Kompetensi C1 (Descending)
+  // 3. Nilai mentah Pengalaman Lapangan C2 (Descending)
+  // 4. Jarak mentah Domisili C5 (Ascending - makin dekat makin prioritas)
   const sorted = [...matrixWR].sort((a, b) => {
-    // Selisih skor preferensi V
     const diff = b.scoreV - a.scoreV;
     if (Math.abs(diff) > 0.0001) {
       return diff;
     }
 
-    // TIE-BREAKER 1: Nilai Ujian Kompetensi (C1) lebih tinggi
-    const c1A = Number(a.rawApplicant?.C1 || 0);
-    const c1B = Number(b.rawApplicant?.C1 || 0);
+    // Tie-breaker 1: C1 Mentah
+    const c1A = Number(a.rawApplicant?.C1 ?? a.rawApplicant?.c1_mentah ?? 0);
+    const c1B = Number(b.rawApplicant?.C1 ?? b.rawApplicant?.c1_mentah ?? 0);
     if (c1B !== c1A) {
       return c1B - c1A;
     }
 
-    // TIE-BREAKER 2: Pengalaman Survei (C2) lebih banyak
-    const c2A = Number(a.rawApplicant?.C2 || 0);
-    const c2B = Number(b.rawApplicant?.C2 || 0);
+    // Tie-breaker 2: C2 Mentah
+    const c2A = Number(a.rawApplicant?.C2 ?? a.rawApplicant?.c2_mentah ?? 0);
+    const c2B = Number(b.rawApplicant?.C2 ?? b.rawApplicant?.c2_mentah ?? 0);
     if (c2B !== c2A) {
       return c2B - c2A;
     }
 
-    // TIE-BREAKER 3: Jarak Domisili (C5) lebih dekat (Cost lebih kecil)
-    const c5A = Number(a.rawApplicant?.C5 || 999);
-    const c5B = Number(b.rawApplicant?.C5 || 999);
+    // Tie-breaker 3: C5 Jarak Mentah (Ascending)
+    const c5A = Number(a.rawApplicant?.C5 ?? a.rawApplicant?.c5_mentah ?? 999);
+    const c5B = Number(b.rawApplicant?.C5 ?? b.rawApplicant?.c5_mentah ?? 999);
     return c5A - c5B;
   });
 
-  // 6. Penentuan Status Rekomendasi berdasarkan Kuota
+  // 7. PENETAPAN STATUS KUOTA LOLOS & CADANGAN
   let countLolos = 0;
   let countCadangan = 0;
   let countTidakLolos = 0;
@@ -232,7 +358,7 @@ export function calculateSAW(applicants = [], criteria = [], options = {}) {
       countTidakLolos++;
     }
 
-    // Deteksi apakah pelamar memiliki skor yang sama dengan tetangganya (Tie-breaker aktif)
+    // Deteksi jika pelamar memiliki nilai kembar dengan pelamar terdekat
     const prevItem = sorted[index - 1];
     const nextItem = sorted[index + 1];
     const hasTie = 
@@ -250,6 +376,7 @@ export function calculateSAW(applicants = [], criteria = [], options = {}) {
   });
 
   return {
+    matrixRaw,
     matrixX,
     extremes,
     matrixR,
