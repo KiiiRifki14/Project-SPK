@@ -1,0 +1,6 @@
+FOLDER BACKUP — TIDAK AKTIF (ARSIP VERSI REACT + VITE)
+======================================================
+Seluruh file proyek lama berbasis React + Vite + LocalStorage dipindahkan ke folder ini sebagai arsip cadangan.
+
+Proyek aktif saat ini menggunakan Laravel 13 + MySQL di:
+d:\Project SPK

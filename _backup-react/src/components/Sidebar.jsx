@@ -1,0 +1,255 @@
+import React from 'react';
+import { 
+  LayoutDashboard, 
+  Sliders, 
+  Users, 
+  Calculator, 
+  Award, 
+  Printer, 
+  ChevronRight, 
+  ShieldCheck, 
+  Sparkles, 
+  BookOpen,
+  Lock,
+  X 
+} from 'lucide-react';
+
+export default function Sidebar({ 
+  activeTab, 
+  setActiveTab, 
+  pelamarCount, 
+  kriteriaCount, 
+  bobotValid,
+  activeRole = 'panitia',
+  isMobileNavOpen,
+  onCloseMobile
+}) {
+  const navigationGroups = [
+    {
+      group: 'MENU UTAMA',
+      items: [
+        {
+          id: 'dashboard',
+          label: 'Dashboard',
+          icon: LayoutDashboard,
+          desc: 'Statistik & alur seleksi'
+        }
+      ]
+    },
+    {
+      group: 'DATA & PARAMETER',
+      items: [
+        {
+          id: 'kriteria',
+          label: 'Data Kriteria',
+          icon: Sliders,
+          desc: activeRole === 'superadmin' ? 'Bobot C1 - C5 & sifat' : 'Bobot C1 - C5 (Read-Only)',
+          badge: `${kriteriaCount || 5} Kriteria`,
+          badgeColor: bobotValid ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-100 text-rose-700 font-bold border border-rose-300 animate-pulse'
+        },
+        {
+          id: 'pelamar',
+          label: 'Data Pelamar',
+          icon: Users,
+          desc: 'Manajemen kandidat & nilai',
+          badge: `${pelamarCount || 0} Calon`,
+          badgeColor: 'bg-slate-100 text-slate-600 border border-slate-200'
+        }
+      ]
+    },
+    {
+      group: 'KOMPUTASI & KEPUTUSAN',
+      items: [
+        {
+          id: 'dapur',
+          label: 'Dapur Hitung SAW',
+          icon: Calculator,
+          desc: '3 Matriks Transparan Dosen',
+          highlight: true
+        },
+        {
+          id: 'ranking',
+          label: 'Hasil Perangkingan',
+          icon: Award,
+          desc: 'Leaderboard & kuota kelulusan'
+        },
+        {
+          id: 'laporan',
+          label: 'Cetak Berita Acara',
+          icon: Printer,
+          desc: 'Format SK Resmi BPS Subang'
+        }
+      ]
+    }
+  ];
+
+  // Render Inner Content of Sidebar (Shared between Desktop & Mobile)
+  const renderSidebarContent = (isMobile = false) => (
+    <div className="flex flex-col justify-between h-full min-h-full">
+      <div>
+        {/* Brand Header */}
+        <div className="h-20 px-5 border-b border-slate-200/90 flex items-center justify-between bg-white">
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="w-11 h-11 rounded-xl bg-bps-navy flex items-center justify-center text-white shadow-md shadow-bps-navy/20 flex-shrink-0 border border-bps-navy-light/40">
+              {/* Logo BPS Geometry */}
+              <svg viewBox="0 0 40 40" className="w-7 h-7">
+                <polygon points="20,6 35,31 5,31" fill="#00A3E0" />
+                <circle cx="20" cy="22.5" r="5.5" fill="#10B981" />
+                <polygon points="12,31 28,31 20,36" fill="#F59E0B" />
+              </svg>
+            </div>
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-black text-sm text-bps-navy tracking-tight truncate">
+                  BPS KAB. SUBANG
+                </span>
+                <span className="px-1.5 py-0.5 text-[10px] font-black rounded-md bg-bps-blue/15 text-bps-blue uppercase tracking-wider">
+                  SAW
+                </span>
+              </div>
+              <p className="text-xs text-slate-500 font-medium truncate mt-0.5">
+                Seleksi Mitra Statistik
+              </p>
+            </div>
+          </div>
+
+          {/* Close button for mobile drawer (44x44px touch target) */}
+          {isMobile && (
+            <button
+              onClick={onCloseMobile}
+              className="w-11 h-11 flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors focus-ring"
+              aria-label="Tutup menu navigasi"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
+        </div>
+
+        {/* Active Role Indicator Badge */}
+        <div className="mx-3 mt-3 px-3 py-2 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-[11px] text-slate-500 font-semibold">
+            <span className={`w-2 h-2 rounded-full ${activeRole === 'superadmin' ? 'bg-emerald-500' : 'bg-bps-blue'} animate-pulse`} />
+            <span>Hak Akses:</span>
+          </div>
+          <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md border ${
+            activeRole === 'superadmin' 
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200' 
+              : 'bg-blue-50 text-bps-navy border-blue-200'
+          }`}>
+            {activeRole === 'superadmin' ? 'Superadmin BPS' : 'Panitia Seleksi'}
+          </span>
+        </div>
+
+        {/* Navigation Sections */}
+        <nav className="p-3 space-y-4">
+          {navigationGroups.map((group) => (
+            <div key={group.group} className="space-y-1">
+              <p className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                {group.group}
+              </p>
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setActiveTab(item.id);
+                      if (isMobile && onCloseMobile) onCloseMobile();
+                    }}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={`w-full group flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-150 text-left focus-ring ${
+                      isActive
+                        ? 'bg-bps-navy text-white shadow-sm font-semibold'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-bps-navy font-medium'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div
+                        className={`p-1.5 rounded-lg transition-colors flex-shrink-0 ${
+                          isActive
+                            ? 'bg-white/15 text-white'
+                            : item.highlight
+                            ? 'bg-bps-blue/10 text-bps-blue group-hover:bg-bps-blue/20'
+                            : 'bg-slate-100 text-slate-500 group-hover:text-bps-navy'
+                        }`}
+                      >
+                        <Icon className="w-4 h-4" aria-hidden="true" />
+                      </div>
+                      <div className="truncate">
+                        <span className="text-xs font-bold block truncate leading-tight">
+                          {item.label}
+                        </span>
+                        <span
+                          className={`text-[10px] block truncate leading-tight mt-0.5 ${
+                            isActive ? 'text-blue-200' : 'text-slate-400'
+                          }`}
+                        >
+                          {item.desc}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 flex-shrink-0 ml-1.5">
+                      {item.badge && !isActive && (
+                        <span className={`px-1.5 py-0.5 text-[9px] rounded-md font-semibold ${item.badgeColor || 'bg-slate-100 text-slate-600'}`}>
+                          {item.badge}
+                        </span>
+                      )}
+                      {item.highlight && !isActive && (
+                        <span className="w-2 h-2 rounded-full bg-bps-blue animate-ping" title="Modul Ilmiah Dosen" />
+                      )}
+                      {isActive && <ChevronRight className="w-3.5 h-3.5 text-white/70" />}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          ))}
+        </nav>
+      </div>
+
+      {/* Academic Citation Footer */}
+      <div className="p-3 m-3 rounded-xl bg-slate-50 border border-slate-200/90 text-xs space-y-2">
+        <div className="flex items-center gap-2 font-bold text-bps-navy text-xs">
+          <BookOpen className="w-3.5 h-3.5 text-bps-blue flex-shrink-0" />
+          <span>Buku Ajar SPK Polsub</span>
+        </div>
+        <p className="text-[10.5px] text-slate-500 leading-relaxed">
+          Metode SAW Bab 5 karya Pak Chepy Perdana dkk diterapkan pada seleksi mitra BPS Subang.
+        </p>
+        <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-400 font-medium">
+          <span className="font-semibold text-slate-600">Kelompok 8 D3 SI</span>
+          <span className="px-1.5 py-0.2 rounded bg-emerald-100 text-emerald-800 font-bold text-[9px]">100% Teruji</span>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* 1. Desktop Docked Sidebar (Hidden on Mobile) */}
+      <aside className="hidden md:flex md:w-64 lg:w-72 bg-white border-r border-slate-200/90 flex-col justify-between no-print shadow-[1px_0_4px_rgba(0,0,0,0.02)] fixed inset-y-0 left-0 z-30 h-screen overflow-y-auto">
+        {renderSidebarContent(false)}
+      </aside>
+
+      {/* 2. Mobile Off-Canvas Drawer with Backdrop (Visible only on Mobile when open) */}
+      {isMobileNavOpen && (
+        <div className="md:hidden fixed inset-0 z-50 flex" role="dialog" aria-modal="true">
+          {/* Dark Backdrop Overlay */}
+          <div 
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity animate-fade-in"
+            onClick={onCloseMobile}
+            aria-hidden="true"
+          />
+
+          {/* Drawer Canvas */}
+          <aside className="relative flex-1 flex flex-col max-w-[280px] w-full bg-white shadow-2xl z-10 animate-slide-in overflow-y-auto">
+            {renderSidebarContent(true)}
+          </aside>
+        </div>
+      )}
+    </>
+  );
+}
